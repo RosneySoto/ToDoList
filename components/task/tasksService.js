@@ -21,7 +21,8 @@ class ContainerTasks {
                 title: task.title,
                 detail: task.detail,
                 priorityId: task.priorityId,
-                userId: task.userId 
+                userId: task.userId,
+                assignedUser: task.assignedUser
             });
             return newTask.save();
         } catch (error) {

@@ -1,9 +1,14 @@
 const express = require('express');
+// const passport = require('../middleware/passport');
+const { authenticate, register } = require('../middleware/auth');
 const router = express.Router();
+
 const { listTask, addTask, updateTask, deleteTask, finishTask } = require('../components/task/tasksController');
+
 const { listPriority, addPriority, getTaskByPriority } = require('../components/priority/priorityController');
-const { addUser, getUsers, deleteUser, updateUser, getUserById, getTaskByUser, loginUser, logoutUser } = require('../components/user/userController');
-const passport = require('../middleware/passport');
+
+const { addUser, getUsers, deleteUser, updateUser, getUserById, getTaskByUser, loginUser, logoutUser, getLoginUser } = require('../components/user/userController');
+
 
 //RUTAS DEL COMPONENTE TASK
 router.get('/', listTask);
@@ -18,12 +23,13 @@ router.get('/priority/:id', getTaskByPriority);
 router.post('/addPriority', addPriority);
 
 //RUTAS DEL COMPONENTE USER+
-router.post('/user', addUser);
-router.post('/login/user', passport.authenticate('autenticacion', {
-    // successRedirect: '/',
-    // failureRedirect: '/task/login/user',
-    passReqToCallback: true
-}), loginUser);
+router.get('/login', getLoginUser);
+router.post('/login', authenticate, loginUser);
+// router.post('/login', passport.authenticate('autenticacion', {
+    // failureRedirect: '/login',
+    // successRedirect: '/'}), loginUser);
+
+router.post('/user', register, addUser);
 router.get('/user', getUsers);
 router.get('/user/:id', getUserById);
 router.get('/user/tasklist/:id', getTaskByUser);

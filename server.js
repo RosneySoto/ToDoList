@@ -6,7 +6,7 @@ const db = require('./db');
 const routes = require('./routes/routes');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-const passport = require('passport');
+// const passport = require('passport');
 
 
 const app = express();
@@ -27,20 +27,21 @@ app.use(session({
     resave: true,
     saveUninitialized: false,
 }));
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 db(process.env.MONGODB_DATABASE);
 
 
 
 
-app.use('/task', routes);
+app.use('/', routes);
 
 app.listen(PORT, function(){
     console.log(`conectado al puerto ${PORT}`);

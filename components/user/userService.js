@@ -21,15 +21,17 @@ class ContainerUser {
 
     static async loginUser(email){
         try {
+            console.log(email);
             const user = await userModel.findOne({email: email});
             if(!user){
                 console.log('El usuario no existe');
-                return null
+                return null;
             } else {
                 return user;
             };
         } catch (error) {
             console.log('[ERROR]-> Error al loguear el usuario');
+            throw error;
         };
     };
 

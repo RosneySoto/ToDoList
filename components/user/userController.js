@@ -1,6 +1,7 @@
 const ContainerUser = require('./userService');
 const userModel = require('../../model/userModel');
 const {compare, encrypt} = require('../../middleware/bcrypt');
+const {generarJwt, tokenValido, verificarJwt} = require('../../middleware/jwt')
 
 const addUser = async (req, res) => {
     try {
@@ -8,27 +9,12 @@ const addUser = async (req, res) => {
 
         if (!name || !lastname || !email || !password || !birthday) {
             console.log('[ERROR]-> Faltan datos del usuario');
-            return res.status(400).send('Faltan datos del usuario');
-        }
-
-        const userFind = await userModel.findOne({ email: email });
-
-        if (userFind) {
-            console.log('[ERROR]-> El usuario ya existe');
-            return res.status(400).send('El usuario ya está registrado');
+            return res.status(404).send('Faltan datos del usuario');
         } else {
-            const passwordHash = await encrypt(password);
-
-            const newUser = {
-                name: name,
-                lastname: lastname,
-                email: email,
-                password: passwordHash,
-                birthday: birthday,
-            };
-            const saveUser = await ContainerUser.addUser(newUser);
-            return res.status(201).send({user: saveUser});
-        };
+            const user = req.user;
+            const token = generarJwt(user);
+            res.status(201).send({token});
+        };        
     } catch (error) {
         console.log('Error, no se puede crear el usuario', error);
         throw error;
@@ -36,51 +22,18 @@ const addUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        console.log(req.body);
+    const {email, password} = req.body
+    if(!email || !password || email === "" || password === ""){
+        res.status(404).send('Debe ingresar usuario y contraseña')
+    } else {
+        const user = req.user;
+        const token = generarJwt(user);
+        res.status(200).send({token});
+    };
+};
 
-        if(!email || !password){
-            console.log('[ERROR]-> Faltan datos del usuario');
-            return res.status(400).send('Faltan datos del usuario');
-        };
-
-       const finUser = await ContainerUser.loginUser(email);
-
-       if(!finUser){
-            return res.status(401).send('No se encontro el usuario')
-       } else {
-            return res.status(200).send({user: finUser})
-       };
-
-
-        // const userFind = await userModel.findOne({email: email});
-        // if(!userFind){
-        //     console.log('[ERROR]-> Usuario incorrecto');
-        //     return res.status(400).send('Usuario incorrectoc');
-        // }
-
-        // if(userFind){
-
-        //     const checkPass = await compare(password, userFind.password);
-
-        //     if(checkPass){
-        //         req.session.user = userFind;
-        //         console.log(req.session);
-        //         return res.status(200).send({ data: userFind})
-        //     } else{ 
-        //         return res.status(400).send('Clave incorrecta')
-        //     };
-
-        // } else {
-        //     console.log('[ERROR]-> No se pudo procesar');
-        //     return res.status(400).send('Faltan datos del usuario');
-        // };
-
-    } catch (error) {
-        console.log('Error, no se pudo loguear', error);
-        throw error;
-    }
+const getLoginUser = (req, res) => {
+    res.send('Por favor inica Sesion');
 };
 
 const getUsers = async (req, res) => {
@@ -174,5 +127,6 @@ module.exports = {
     getUserById,
     getTaskByUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    getLoginUser
 }
