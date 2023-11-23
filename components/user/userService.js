@@ -21,7 +21,6 @@ class ContainerUser {
 
     static async loginUser(email){
         try {
-            console.log(email);
             const user = await userModel.findOne({email: email});
             if(!user){
                 console.log('El usuario no existe');

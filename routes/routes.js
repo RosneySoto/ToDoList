@@ -1,6 +1,6 @@
 const express = require('express');
 // const passport = require('../middleware/passport');
-const { authenticate, register } = require('../middleware/auth');
+const { authenticate, register, verifyToken,generateToken } = require('../middleware/auth');
 const router = express.Router();
 
 const { listTask, addTask, updateTask, deleteTask, finishTask } = require('../components/task/tasksController');
@@ -11,7 +11,7 @@ const { addUser, getUsers, deleteUser, updateUser, getUserById, getTaskByUser, l
 
 
 //RUTAS DEL COMPONENTE TASK
-router.get('/', listTask);
+router.get('/', verifyToken, listTask);
 router.post('/', addTask);
 router.patch('/edit/:id', updateTask);
 router.delete('/delete/:id', deleteTask);
@@ -24,13 +24,9 @@ router.post('/addPriority', addPriority);
 
 //RUTAS DEL COMPONENTE USER+
 router.get('/login', getLoginUser);
-router.post('/login', authenticate, loginUser);
-// router.post('/login', passport.authenticate('autenticacion', {
-    // failureRedirect: '/login',
-    // successRedirect: '/'}), loginUser);
-
+router.post('/login', authenticate, generateToken, loginUser);
 router.post('/user', register, addUser);
-router.get('/user', getUsers);
+router.get('/user', verifyToken, getUsers);
 router.get('/user/:id', getUserById);
 router.get('/user/tasklist/:id', getTaskByUser);
 router.delete('/user/:id', deleteUser);

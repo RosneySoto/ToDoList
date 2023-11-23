@@ -1,7 +1,7 @@
 const ContainerUser = require('./userService');
 const userModel = require('../../model/userModel');
 const {compare, encrypt} = require('../../middleware/bcrypt');
-const {generarJwt, tokenValido, verificarJwt} = require('../../middleware/jwt')
+const {generarJwt, tokenValido, verificarJwt} = require('../../middleware/auth');
 
 const addUser = async (req, res) => {
     try {
@@ -12,8 +12,7 @@ const addUser = async (req, res) => {
             return res.status(404).send('Faltan datos del usuario');
         } else {
             const user = req.user;
-            const token = generarJwt(user);
-            res.status(201).send({token});
+            res.status(201).send('Logeado correctamente');
         };        
     } catch (error) {
         console.log('Error, no se puede crear el usuario', error);
@@ -26,9 +25,7 @@ const loginUser = async (req, res) => {
     if(!email || !password || email === "" || password === ""){
         res.status(404).send('Debe ingresar usuario y contraseña')
     } else {
-        const user = req.user;
-        const token = generarJwt(user);
-        res.status(200).send({token});
+        res.status(200).send({token: req.token});
     };
 };
 

@@ -1,6 +1,9 @@
+require('dotenv').config();
 const ContainerUser = require('../components/user/userService');
 const {compare, encrypt} = require('./bcrypt');
 const userModel = require('../model/userModel');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = process.env;
 
 
 const authenticate = async (req, res, next) => {
@@ -59,8 +62,49 @@ const register = async (req, res, next) => {
 };
 
 
+const generateToken = async (req, res, next) => {
+    const user = req.user;
+
+    if (!user) {
+        return res.status(401).send('No estas autorizado');
+    };
+
+    const payload = {
+        id: user.id,
+        email: user.email       
+    };
+    console.log(payload);
+
+    const token = jwt.sign(payload, JWT_SECRET, {expiresIn: '1h'});
+    console.log(`EL TOKEN ES: ${token}`);
+
+    req.token = token;
+    next();
+};
+
+
+const verifyToken = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if(!authHeader){
+        return res.status(403).send({message: 'No se proporciono token'});
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    jwt.verify(token, JWT_SECRET, (error, data) =>{
+        if(error){
+            return res.status(401).send({message: 'No estas autorizado'});
+        }
+        res.userId = data.email;
+        next();
+    });
+};
+
 
 module.exports = {
     authenticate,
-    register
+    register,
+    verifyToken,
+    generateToken
 };
