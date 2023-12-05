@@ -29,6 +29,14 @@ const taskSchema = new Schema({
     assignedUser: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
+    },
+    pointsTask: {
+        type: Number,
+        require: true
+    },
+    completionDate: {
+        type: Date,
+        default: null
     }
 });
 

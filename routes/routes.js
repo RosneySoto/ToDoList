@@ -3,7 +3,7 @@ const express = require('express');
 const { authenticate, register, verifyToken,generateToken } = require('../middleware/auth');
 const router = express.Router();
 
-const { listTask, addTask, updateTask, deleteTask, finishTask } = require('../components/task/tasksController');
+const { listTask, addTask, updateTask, deleteTask, finishTask, openTask } = require('../components/task/tasksController');
 
 const { listPriority, addPriority, getTaskByPriority } = require('../components/priority/priorityController');
 
@@ -16,6 +16,7 @@ router.post('/', addTask);
 router.patch('/edit/:id', updateTask);
 router.delete('/delete/:id', deleteTask);
 router.put('/finish/:id', finishTask);
+router.put('/openTask/:id', openTask);
 
 //RUTAS DEL COMPONENTE PRIORITY
 router.get('/priority', listPriority);

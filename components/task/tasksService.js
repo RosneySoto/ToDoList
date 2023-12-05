@@ -1,4 +1,5 @@
 const tasksModel = require('../../model/taskDB');
+const usersModel = require('../../model/userModel');
 
 class ContainerTasks {
     
@@ -22,7 +23,8 @@ class ContainerTasks {
                 detail: task.detail,
                 priorityId: task.priorityId,
                 userId: task.userId,
-                assignedUser: task.assignedUser
+                assignedUser: task.assignedUser,
+                pointsTask: task.pointsTask
             });
             return newTask.save();
         } catch (error) {
@@ -54,26 +56,53 @@ class ContainerTasks {
         };
     };
 
-    static async finishTask (id){
+    static async finishTask (id, completeByUserId){
         try {
             const resultId = await tasksModel.findById(id);
-            if(resultId && resultId.active === true){
-                let taskId = await tasksModel.findByIdAndUpdate(id, 
-                    {active: false},
-                    {new: true});
-                console.log('Se desactiva la tarea');
 
-            }else if (resultId && resultId.active === false){
+            if(resultId && resultId.active === true){
+
+                let updatedTask = await tasksModel.findByIdAndUpdate(id, {
+                    assignedUser: completeByUserId,
+                    completionDate: Date.now(),
+                    active: false
+                }, { new: true });
+
+                console.log('Se finaliza la tarea');
+
+                // Incrementa los puntos del usuario asignado
+                const assignedUser = await usersModel.findByIdAndUpdate(resultId.assignedUser, {
+                    $inc: { points: resultId.pointsTask }
+                }, { new: true });
+
+                return { updatedTask, assignedUser }
+
+            } else {
+                console.log('No se encontraron tareas a modificar');
+                return null;
+            }
+
+        } catch (error) {
+            console.log('[ERROR]-> Error al finalizar la tarea', error);
+            throw error;
+        };
+    };
+
+    static async openTask (id){
+        try {
+            const resultId = await tasksModel.findById(id);
+
+            if(resultId && resultId.active === false){
                 let taskId = await tasksModel.findByIdAndUpdate(id, 
                     {active: true},
                     {new: true});
-               console.log('Se activa la tarea');
+                return { taskId }
             } else {
                 console.log('No se encontraron tareas a modificar');
             }
-            return resultId;
         } catch (error) {
-            console.log('[ERROR]-> Error al finalizar la tarea', error);
+            console.log('[ERROR]-> Error al abrir la tarea', error);
+            throw error;
         }
     }
 };

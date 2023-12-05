@@ -20,6 +20,10 @@ const userSchema = new Schema({
     },
     birthday: {
         type: Date,
+    },
+    points: {
+        type: Number,
+        default: 0
     }
 });
 

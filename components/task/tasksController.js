@@ -47,10 +47,27 @@ const deleteTask = async (req, res) => {
 };
 
 const finishTask = async (req, res) => {
+    const taskId = req.params.id;
+    const completedByUserId = req.body.assignedUser; // Asegúrate de enviar el ID del usuario que completó la tarea desde el cliente
+
+    try {
+        const result = await ContainerTasks.finishTask(taskId, completedByUserId);
+        if (result) {
+            res.json({ message: 'Tarea completada exitosamente', result });
+        } else {
+            res.status(404).json({ error: 'No se encontró la tarea activa con el ID proporcionado' });
+        }
+    } catch (error) {
+        console.error('[ERROR] -> Hubo un error al completar la tarea', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+const openTask = async (req, res) => {
     const id = req.params.id;
     try {
-        const result = await ContainerTasks.finishTask(id);
-        res.send({taskFinish: result})
+        const result = await ContainerTasks.openTask(id);
+        res.send({taskOpen: result})
     } catch (error) {
         console.log('[ERROR]-> Hubo un error, intente mas tarde', error);
     }
@@ -62,4 +79,5 @@ module.exports = {
     updateTask,
     deleteTask,
     finishTask,
+    openTask
 };
