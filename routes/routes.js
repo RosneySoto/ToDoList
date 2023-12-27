@@ -1,37 +1,40 @@
 const express = require('express');
-// const passport = require('../middleware/passport');
-const { authenticate, register, verifyToken,generateToken } = require('../middleware/auth');
+const { authenticate, register, verifyToken,generateToken, verifySession } = require('../middleware/auth');
 const router = express.Router();
 
+//Importaciones Modulo Task
 const { listTask, addTask, updateTask, deleteTask, finishTask, openTask } = require('../components/task/tasksController');
 
+//Importaciones Modulo Prioriry
 const { listPriority, addPriority, getTaskByPriority } = require('../components/priority/priorityController');
 
-const { addUser, getUsers, deleteUser, updateUser, getUserById, getTaskByUser, loginUser, logoutUser, getLoginUser } = require('../components/user/userController');
+//Importaciones Modulo User
+const { addUser, getUsers, deleteUser, updateUser, getUserById, getTaskByUser, loginUser, logoutUser, getLoginUser, updatePass } = require('../components/user/userController');
 
 
 //RUTAS DEL COMPONENTE TASK
-router.get('/', verifyToken, listTask);
-router.post('/', addTask);
-router.patch('/edit/:id', updateTask);
-router.delete('/delete/:id', deleteTask);
-router.put('/finish/:id', finishTask);
-router.put('/openTask/:id', openTask);
+router.get('/', verifySession, verifyToken, listTask);
+router.post('/', verifySession, verifyToken, addTask);
+router.patch('/edit/:id', verifySession, verifyToken, updateTask);
+router.delete('/delete/:id', verifySession, verifyToken, deleteTask);
+router.put('/finish/:id', verifySession, verifyToken, finishTask);
+router.put('/openTask/:id', verifySession, verifyToken, openTask);
 
 //RUTAS DEL COMPONENTE PRIORITY
-router.get('/priority', listPriority);
-router.get('/priority/:id', getTaskByPriority);
-router.post('/addPriority', addPriority);
+router.get('/priority', verifySession, verifyToken, listPriority);
+router.get('/priority/:id', verifySession, verifyToken, getTaskByPriority);
+router.post('/addPriority', verifySession, verifyToken, addPriority);
 
 //RUTAS DEL COMPONENTE USER+
 router.get('/login', getLoginUser);
 router.post('/login', authenticate, generateToken, loginUser);
 router.post('/user', register, addUser);
-router.get('/user', verifyToken, getUsers);
-router.get('/user/:id', getUserById);
-router.get('/user/tasklist/:id', getTaskByUser);
-router.delete('/user/:id', deleteUser);
-router.put('/user/:id', updateUser);
-router.get('/logout', logoutUser);
+router.get('/user', verifySession, verifyToken, getUsers);
+router.get('/user/:id', verifySession, verifyToken, getUserById);
+router.get('/user/tasklist/:id', verifySession, verifyToken, getTaskByUser);
+router.delete('/user/:id', verifySession, verifyToken, deleteUser);
+router.put('/user/:id', verifySession, verifyToken, updateUser);
+router.get('/logout', verifySession, verifyToken, logoutUser);
+router.put('/pass', updatePass);
 
 module.exports = router;

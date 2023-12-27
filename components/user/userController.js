@@ -25,7 +25,7 @@ const loginUser = async (req, res) => {
     if(!email || !password || email === "" || password === ""){
         res.status(404).send('Debe ingresar usuario y contraseña')
     } else {
-        res.status(200).send({token: req.token});
+        res.status(200).send({message: 'Usuario logueado exitosamente'});
     };
 };
 
@@ -116,6 +116,28 @@ const logoutUser = async (req, res) => {
     });
 };
 
+const updatePass = async (req, res) => {
+    const { email, pass1, pass2 } = req.body;
+    
+    try {
+        const passUpdate = await ContainerUser.changePassword(email, pass1);
+
+        if (!passUpdate) {
+            return res.status(401).json({ error: 'El usuario no existe' });
+        }
+
+        if (pass1 === pass2) {
+            res.json({ passUpdate: 'Se modificó correctamente la contraseña' });
+        } else {
+            res.json({ error: 'La contraseña no coincide' });
+        }
+
+    } catch (error) {
+        console.log('error al editar el password', error);
+        res.status(500).json({ error: 'Error al editar el password' });
+    };
+};
+
 module.exports = {
     addUser,
     getUsers,
@@ -125,5 +147,6 @@ module.exports = {
     getTaskByUser,
     loginUser,
     logoutUser,
-    getLoginUser
+    getLoginUser,
+    updatePass
 }

@@ -9,17 +9,19 @@ const { JWT_SECRET } = process.env;
 const authenticate = async (req, res, next) => {
      try {
         const {email, password} = req.body
-        const findUser = await ContainerUser.loginUser(email);
-        if(!findUser) {
+        const user = await ContainerUser.loginUser(email);
+        if(!user) {
             console.log('El usuario no existe');
             return res.status(404).send('El usuario no existe');
 
         } else {
 
-            const checkPass = await compare(password, findUser.password);
+            const checkPass = await compare(password, user.password);
 
             if(checkPass){
-                req.user = findUser;
+                req.user = user;
+                req.session.user = { id: user.id, email: user.email }
+                console.log(req.session.user);
                 return next();
             } else {
                console.log('Error en el password');
@@ -73,7 +75,7 @@ const generateToken = async (req, res, next) => {
         id: user.id,
         email: user.email       
     };
-    console.log(payload);
+    // console.log(payload);
 
     const token = jwt.sign(payload, JWT_SECRET, {expiresIn: '1h'});
     console.log(`EL TOKEN ES: ${token}`);
@@ -94,17 +96,27 @@ const verifyToken = async (req, res, next) => {
 
     jwt.verify(token, JWT_SECRET, (error, data) =>{
         if(error){
-            return res.status(401).send({message: 'No estas autorizado'});
+            return res.status(401).send({message: 'No estas autorizado token'});
         }
         res.userId = data.email;
         next();
     });
 };
 
+const verifySession = async (req, res, next) => {
+    if (req.session.user) {
+        next();
+    } else {
+        // El usuario no está autenticado, redirigir o enviar un error 401
+        res.status(401).send('Acceso no autorizado session');
+    }
+}
+
 
 module.exports = {
     authenticate,
     register,
     verifyToken,
-    generateToken
+    generateToken,
+    verifySession
 };

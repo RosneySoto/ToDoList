@@ -48,18 +48,23 @@ const deleteTask = async (req, res) => {
 
 const finishTask = async (req, res) => {
     const taskId = req.params.id;
-    const completedByUserId = req.body.assignedUser; // Asegúrate de enviar el ID del usuario que completó la tarea desde el cliente
+    const createdByUserId = req.session.user.id;
+    console.log(createdByUserId);
 
     try {
-        const result = await ContainerTasks.finishTask(taskId, completedByUserId);
+        const result = await ContainerTasks.finishTask(taskId, createdByUserId);
         if (result) {
             res.json({ message: 'Tarea completada exitosamente', result });
         } else {
             res.status(404).json({ error: 'No se encontró la tarea activa con el ID proporcionado' });
         }
     } catch (error) {
-        console.error('[ERROR] -> Hubo un error al completar la tarea', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        if (error.message === 'No tienes permisos para finalizar esta tarea') {
+            res.status(403).json({ error: 'No tienes permisos para finalizar esta tarea, debe ser finalizada por el usuario que la creó.' });
+        } else {
+            console.error('[ERROR] -> Hubo un error al completar la tarea', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
     }
 };
 

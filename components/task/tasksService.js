@@ -56,36 +56,39 @@ class ContainerTasks {
         };
     };
 
-    static async finishTask (id, completeByUserId){
+    static async finishTask(id, createdByUserId) {
         try {
-            const resultId = await tasksModel.findById(id);
-
-            if(resultId && resultId.active === true){
-
+            const resultTask = await tasksModel.findById(id);
+    
+            if (resultTask && resultTask.active === true) {
+                // Verifica que el usuario que intenta finalizar la tarea sea el asignado o el creador
+                if (createdByUserId != resultTask.userId) {
+                    throw new Error('No tienes permisos para finalizar esta tarea');
+                }
+    
                 let updatedTask = await tasksModel.findByIdAndUpdate(id, {
-                    assignedUser: completeByUserId,
                     completionDate: Date.now(),
                     active: false
                 }, { new: true });
-
+    
                 console.log('Se finaliza la tarea');
-
+    
                 // Incrementa los puntos del usuario asignado
-                const assignedUser = await usersModel.findByIdAndUpdate(resultId.assignedUser, {
-                    $inc: { points: resultId.pointsTask }
+                const assignedUser = await usersModel.findByIdAndUpdate(resultTask.assignedUser, {
+                    $inc: { points: resultTask.pointsTask }
                 }, { new: true });
-
-                return { updatedTask, assignedUser }
-
+    
+                return { updatedTask, assignedUser };
+    
             } else {
                 console.log('No se encontraron tareas a modificar');
                 return null;
             }
-
+    
         } catch (error) {
             console.log('[ERROR]-> Error al finalizar la tarea', error);
             throw error;
-        };
+        }
     };
 
     static async openTask (id){

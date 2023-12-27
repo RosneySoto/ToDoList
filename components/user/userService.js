@@ -1,5 +1,6 @@
 const userModel = require('../../model/userModel');
 const taskModel = require('../../model/taskDB');
+const { encrypt } = require('../../middleware/bcrypt');
 
 class ContainerUser {
 
@@ -97,7 +98,19 @@ class ContainerUser {
         };
     };
 
-
+    static async changePassword (email, pass){ 
+        try {
+            const passwordHash = await encrypt(pass); 
+            const userNewPass = userModel.findOneAndUpdate(
+                { email: email }, 
+                { $set: {password: passwordHash} },
+                { new: false }
+            );
+            return userNewPass;
+        } catch (error) {
+            console.log('[ERROR]-> Error al actualizar el password', error);
+        };
+    };
 };
 
 module.exports = ContainerUser;

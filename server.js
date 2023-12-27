@@ -6,8 +6,6 @@ const db = require('./db');
 const routes = require('./routes/routes');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-// const passport = require('passport');
-
 
 const app = express();
 
@@ -25,7 +23,7 @@ app.use(session({
     },
     rolling: true,
     resave: true,
-    saveUninitialized: false,
+    saveUninitialized: true,
 }));
 
 app.use(express.static('public'));
@@ -35,9 +33,6 @@ app.use(bodyParser.json());
 
 
 db(process.env.MONGODB_DATABASE);
-
-
-
 
 app.use('/', routes);
 
