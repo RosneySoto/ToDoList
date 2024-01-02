@@ -88,9 +88,12 @@ class ContainerUser {
         }
     };
 
-    static async getTaskByUser (id){
+    static async getTaskByUserId (id){
         try {
-            const allTaskList = taskModel.find({ userId: id }).populate('userId');
+            const allTaskList = taskModel.find({ userId: id }).populate({
+                path: 'userId assignedUser',
+                select: '-_id name lastname email birthday points'
+            });
             return allTaskList;
         } catch (error) {
             console.log('[ERROR]-> Error al buscar las tareas por usuario');

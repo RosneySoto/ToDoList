@@ -77,7 +77,7 @@ const generateToken = async (req, res, next) => {
     };
     // console.log(payload);
 
-    const token = jwt.sign(payload, JWT_SECRET, {expiresIn: '1h'});
+    const token = jwt.sign(payload, JWT_SECRET, {expiresIn: '24h'});
     console.log(`EL TOKEN ES: ${token}`);
 
     req.token = token;

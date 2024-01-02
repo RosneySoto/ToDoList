@@ -13,13 +13,14 @@ app.use(express.json());
 
 app.use(session({
     store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_DATABASE
+        mongoUrl: process.env.MONGODB_DATABASE,
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }),
     secret: 'secreto',
     cookie: {
         httpOnly: false,
         secure: false,
-        maxAge: 30000
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
     },
     rolling: true,
     resave: true,

@@ -9,7 +9,7 @@ const { listTask, addTask, updateTask, deleteTask, finishTask, openTask } = requ
 const { listPriority, addPriority, getTaskByPriority } = require('../components/priority/priorityController');
 
 //Importaciones Modulo User
-const { addUser, getUsers, deleteUser, updateUser, getUserById, getTaskByUser, loginUser, logoutUser, getLoginUser, updatePass } = require('../components/user/userController');
+const { addUser, getUsers, deleteUser, updateUser, getUserById, loginUser, logoutUser, getLoginUser, updatePass, getTaskByUserId } = require('../components/user/userController');
 
 
 //RUTAS DEL COMPONENTE TASK
@@ -31,7 +31,7 @@ router.post('/login', authenticate, generateToken, loginUser);
 router.post('/user', register, addUser);
 router.get('/user', verifySession, verifyToken, getUsers);
 router.get('/user/:id', verifySession, verifyToken, getUserById);
-router.get('/user/tasklist/:id', verifySession, verifyToken, getTaskByUser);
+router.get('/user/tasklist/:id', verifySession, verifyToken, getTaskByUserId);
 router.delete('/user/:id', verifySession, verifyToken, deleteUser);
 router.put('/user/:id', verifySession, verifyToken, updateUser);
 router.get('/logout', verifySession, verifyToken, logoutUser);

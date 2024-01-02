@@ -98,13 +98,17 @@ const getUserById = async (req, res) => {
     };
 };
 
-const getTaskByUser = async (req, res) => {
-    const id = req.params.id;
+const getTaskByUserId = async (req, res) => {
     try {
-        const taskByUserFind = await ContainerUser.getTaskByUser(id);
-        res.status(200).send({allTaskByUser: taskByUserFind});
+        const id = req.params.id;
+        if(!id) {
+            res.status(404).json('Error, usuario no encontrado');    
+        };
+
+        const taskOfUser = await ContainerUser.getTaskByUserId(id);
+        res.status(200).json({Task_Of_User: taskOfUser});
     } catch (error) {
-        res.status(404).send('Error');
+        res.status(404).json('Error');
         console.log('Error al listar las tareas por ID de usuario', error);
     };
 };
@@ -144,9 +148,9 @@ module.exports = {
     deleteUser,
     updateUser,
     getUserById,
-    getTaskByUser,
+    getTaskByUserId,
     loginUser,
     logoutUser,
     getLoginUser,
-    updatePass
+    updatePass,
 }
