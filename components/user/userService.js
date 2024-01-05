@@ -92,7 +92,7 @@ class ContainerUser {
         try {
             const allTaskList = taskModel.find({ userId: id }).populate({
                 path: 'userId assignedUser',
-                select: '-_id name lastname email birthday points'
+                select: '-_id name lastname'
             });
             return allTaskList;
         } catch (error) {

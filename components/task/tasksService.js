@@ -5,7 +5,10 @@ class ContainerTasks {
     
     static getTask(){
         try {
-            const listTask = tasksModel.find();
+            const listTask = tasksModel.find().populate({
+                path: 'userId assignedUser priorityId',
+                select: '_id name lastname'
+            });
             if(!listTask) {
                 console.log('Error al listar las tareas');
             } else {
