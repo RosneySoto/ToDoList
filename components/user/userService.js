@@ -91,7 +91,7 @@ class ContainerUser {
     static async getTaskByUserId (id){
         try {
             const allTaskList = taskModel.find({ userId: id }).populate({
-                path: 'userId assignedUser',
+                path: 'userId assignedUser priorityId',
                 select: '-_id name lastname'
             });
             return allTaskList;

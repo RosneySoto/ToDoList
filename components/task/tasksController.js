@@ -1,10 +1,13 @@
 const ContainerTasks = require('../task/tasksService');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = process.env;
 
 const listTask = async (req, res) => {
     try {
         const lisTask = await ContainerTasks.getTask();
-        res.send({task: lisTask});
+        res.status(200).json({task: lisTask});
     } catch (error) {
+        res.status(500).json({error: 'Error en el controlador'});
         console.log('No se pueden mostrar las tareas');
     };
 };
@@ -13,12 +16,20 @@ const addTask = async (req, res) => {
     try {
         const newTask = req.body;
         if(!newTask){
-            res.send('No se registro tarea')
+            res.status(404).json('No se registro tarea')
         } else {
-            taskSave = await ContainerTasks.addTask(newTask);
+            const token = req.headers.authorization.split(' ')[1];
+            // Decodificar el token para obtener el ID del usuario
+            const decodedToken = jwt.verify(token, JWT_SECRET);
+            const userId = decodedToken.id;
+            
+            console.log(userId);
+
+            taskSave = await ContainerTasks.addTask(newTask, userId);
         }
-        res.send({newTask: taskSave});
+        res.status(201).json({newTask: taskSave});
     } catch (error) {
+        res.status(500).json({error: 'Error en el controlador'});
         console.log('Error al crear la nueva tarea');
     };
 };
@@ -29,7 +40,7 @@ const updateTask = async (req, res) => {
 
     try {
         const updatedTask = await ContainerTasks.updateTask(id, taskUpdate);
-        res.send({taskUpdate: updatedTask});
+        res.status(200).json({taskUpdate: updatedTask});
     } catch (error) {
         console.log('Error al editar la tarea', error);
         res.status(500).json({ error: 'Error al actualizar la tarea' });
@@ -40,8 +51,9 @@ const deleteTask = async (req, res) => {
     const id = req.params.id;
     try {
         const taskDelete = await ContainerTasks.deleteTask(id)
-        res.send('Tarea eliminada correctamente')
+        res.status(200).json('Tarea eliminada correctamente')
     } catch (error) {
+        res.status(500).json({error: 'Error en el controlador'});
         console.log('[ERROR]-> Hubo un error, intente mas tarde', error)
     };
 };
@@ -54,7 +66,7 @@ const finishTask = async (req, res) => {
     try {
         const result = await ContainerTasks.finishTask(taskId, createdByUserId);
         if (result) {
-            res.json({ message: 'Tarea completada exitosamente', result });
+            res.status(200).json({ message: 'Tarea completada exitosamente', result });
         } else {
             res.status(404).json({ error: 'No se encontró la tarea activa con el ID proporcionado' });
         }
@@ -72,11 +84,29 @@ const openTask = async (req, res) => {
     const id = req.params.id;
     try {
         const result = await ContainerTasks.openTask(id);
-        res.send({taskOpen: result})
+        res.status(200).json({taskOpen: result})
     } catch (error) {
+        res.status(500).json({error: 'Error en el controlador'});
         console.log('[ERROR]-> Hubo un error, intente mas tarde', error);
     }
 }
+
+const getTaskbyId = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const taskById = await ContainerTasks.getTaskById(id);
+        
+        if(!taskById){
+            res.status(404).json('Error no se encontro la tarea que quieres buscar');
+        } else {
+            res.status(200).json({TaskById: taskById});
+        };
+    } catch (error) {
+        res.status(500).json({error: 'Error en el controlador'});
+        console.log('[ERROR]-> Error en el controlador al buscar tarea por ID', error);
+            throw error;
+    };
+};
 
 module.exports = {
     listTask,
@@ -84,5 +114,6 @@ module.exports = {
     updateTask,
     deleteTask,
     finishTask,
-    openTask
+    openTask,
+    getTaskbyId
 };

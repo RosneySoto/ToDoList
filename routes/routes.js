@@ -3,7 +3,7 @@ const { authenticate, register, verifyToken,generateToken, verifySession } = req
 const router = express.Router();
 
 //Importaciones Modulo Task
-const { listTask, addTask, updateTask, deleteTask, finishTask, openTask } = require('../components/task/tasksController');
+const { listTask, addTask, updateTask, deleteTask, finishTask, openTask, getTaskbyId } = require('../components/task/tasksController');
 
 //Importaciones Modulo Prioriry
 const { listPriority, addPriority, getTaskByPriority } = require('../components/priority/priorityController');
@@ -13,8 +13,9 @@ const { addUser, getUsers, deleteUser, updateUser, getUserById, loginUser, logou
 
 
 //RUTAS DEL COMPONENTE TASK
-router.get('/', verifySession, verifyToken, listTask);
-router.post('/', verifySession, verifyToken, addTask);
+router.get('/task', verifySession, verifyToken, listTask);
+router.get('/task/:id', verifySession, verifyToken, getTaskbyId);
+router.post('/', verifyToken, verifySession, addTask);
 router.patch('/edit/:id', verifySession, verifyToken, updateTask);
 router.delete('/delete/:id', verifySession, verifyToken, deleteTask);
 router.put('/finish/:id', verifySession, verifyToken, finishTask);

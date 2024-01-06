@@ -19,13 +19,13 @@ class ContainerTasks {
         };
     };
 
-    static addTask(task){
+    static addTask(task, userId){
         try {
             const newTask = tasksModel({
                 title: task.title,
                 detail: task.detail,
                 priorityId: task.priorityId,
-                userId: task.userId,
+                userId: userId,
                 assignedUser: task.assignedUser,
                 pointsTask: task.pointsTask
             });
@@ -108,6 +108,29 @@ class ContainerTasks {
             }
         } catch (error) {
             console.log('[ERROR]-> Error al abrir la tarea', error);
+            throw error;
+        }
+    }
+
+    static async getTaskById (id){
+        try {
+            if(!id){
+                console.log('No se selecciono la tarea');
+                return null;
+            }
+            const task = tasksModel.findById(id)
+                .populate({
+                    path: 'userId assignedUser priorityId',
+                    select: '-_id name lastname'
+                });
+            if(!task){
+                console.log('No se encontro la tarea seleccionada')
+                return null;
+            } else {
+                return task
+            }
+        } catch (error) {
+            console.log('[ERROR]-> Error al buscar tarea por ID', error);
             throw error;
         }
     }
