@@ -11,6 +11,8 @@ const { listPriority, addPriority, getTaskByPriority } = require('../components/
 //Importaciones Modulo User
 const { addUser, getUsers, deleteUser, updateUser, getUserById, loginUser, logoutUser, getLoginUser, updatePass, getTaskByUserId } = require('../components/user/userController');
 
+const { addWish, deleteWish, updateWish, wishList, getWishbyId } = require('../components/wishList/wishListController');
+
 
 //RUTAS DEL COMPONENTE TASK
 router.get('/task', verifySession, verifyToken, listTask);
@@ -37,5 +39,12 @@ router.delete('/user/:id', verifySession, verifyToken, deleteUser);
 router.put('/user/:id', verifySession, verifyToken, updateUser);
 router.get('/logout', verifySession, verifyToken, logoutUser);
 router.put('/pass', updatePass);
+
+//RUTAS DEL COMPONENTE WISH-LIST
+router.get('/wish', verifySession, verifyToken, wishList);
+router.get('/wish/:id', verifySession, verifyToken, getWishbyId);
+router.post('/wish', verifyToken, verifySession, addWish);
+router.patch('/wishEdit/:id', verifySession, verifyToken, updateWish);
+router.delete('/wishDelete/:id', verifySession, verifyToken, deleteWish);
 
 module.exports = router;

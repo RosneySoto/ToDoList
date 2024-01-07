@@ -43,7 +43,6 @@ class ContainerTasks {
             },{
                 new: true
             });
-            // console.log(updatedTaskData); // Puedes imprimir la tarea actualizada aquí si lo necesitas
             return updatedTask;
         } catch (error) {
             console.log('[ERROR]-> Error al actualizar la tarea:', error);
