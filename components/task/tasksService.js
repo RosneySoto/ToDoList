@@ -63,30 +63,46 @@ class ContainerTasks {
             const resultTask = await tasksModel.findById(id);
     
             if (resultTask && resultTask.active === true) {
-                // Verifica que el usuario que intenta finalizar la tarea sea el asignado o el creador
-                if (createdByUserId != resultTask.userId) {
-                    throw new Error('No tienes permisos para finalizar esta tarea');
-                }
+
+                // Verifica que la tarea no tenga usuario asignados, si no tiene usuarios la puede finalizar cualquier usuario y se le guardan los puntos.
+                if(resultTask.assignedUser === null) {
+
+                    let updatedTaskComplete = await tasksModel.findByIdAndUpdate(id, {
+                        completionDate: Date.now(),
+                        active: false,
+                        assignedUser: createdByUserId
+                    }, { new: true });
+
+                    const assignedUserComplete = await usersModel.findByIdAndUpdate(createdByUserId, {
+                        $inc: { points: resultTask.pointsTask }
+                    }, { new: true });
+
+                    return { updatedTaskComplete, assignedUserComplete };
+
+                } else {
+                    // Verifica que el usuario que intenta finalizar la tarea sea el que la creo, solo el la puede terminar
+                    if (createdByUserId != resultTask.userId) {
+                        throw new Error('No tienes permisos para finalizar esta tarea');
+                    };
     
-                let updatedTask = await tasksModel.findByIdAndUpdate(id, {
-                    completionDate: Date.now(),
-                    active: false
-                }, { new: true });
+                    let updatedTask = await tasksModel.findByIdAndUpdate(id, {
+                        completionDate: Date.now(),
+                        active: false
+                    }, { new: true });
     
-                console.log('Se finaliza la tarea');
-    
-                // Incrementa los puntos del usuario asignado
-                const assignedUser = await usersModel.findByIdAndUpdate(resultTask.assignedUser, {
-                    $inc: { points: resultTask.pointsTask }
-                }, { new: true });
-    
-                return { updatedTask, assignedUser };
-    
+                    // Incrementa los puntos del usuario asignado
+                    const assignedUser = await usersModel.findByIdAndUpdate(resultTask.assignedUser, {
+                        $inc: { points: resultTask.pointsTask }
+                    }, { new: true });
+        
+                    return { updatedTask, assignedUser };
+                };
+
             } else {
                 console.log('No se encontraron tareas a modificar');
                 return null;
-            }
-    
+            };
+
         } catch (error) {
             console.log('[ERROR]-> Error al finalizar la tarea', error);
             throw error;

@@ -4,11 +4,11 @@ const Schema = mongoose.Schema;
 const taskSchema = new Schema({
     title: {
         type: String,
-        require: true
+        required: true
     }, 
     detail: {
         type: String,
-        require: true
+        required: true
     },
     date: {
         type: Date,
@@ -28,11 +28,13 @@ const taskSchema = new Schema({
     },
     assignedUser: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
+        ref: 'user',
+        required: false,
+        default: null
     },
     pointsTask: {
         type: Number,
-        require: true
+        required: true
     },
     completionDate: {
         type: Date,

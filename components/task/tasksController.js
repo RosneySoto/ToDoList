@@ -22,8 +22,6 @@ const addTask = async (req, res) => {
             // Decodificar el token para obtener el ID del usuario
             const decodedToken = jwt.verify(token, JWT_SECRET);
             const userId = decodedToken.id;
-            
-            console.log(userId);
 
             taskSave = await ContainerTasks.addTask(newTask, userId);
         }
@@ -69,15 +67,15 @@ const finishTask = async (req, res) => {
             res.status(200).json({ message: 'Tarea completada exitosamente', result });
         } else {
             res.status(404).json({ error: 'No se encontró la tarea activa con el ID proporcionado' });
-        }
+        };
     } catch (error) {
         if (error.message === 'No tienes permisos para finalizar esta tarea') {
             res.status(403).json({ error: 'No tienes permisos para finalizar esta tarea, debe ser finalizada por el usuario que la creó.' });
         } else {
             console.error('[ERROR] -> Hubo un error al completar la tarea', error);
             res.status(500).json({ error: 'Internal Server Error' });
-        }
-    }
+        };
+    };
 };
 
 const openTask = async (req, res) => {

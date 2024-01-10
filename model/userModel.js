@@ -4,19 +4,19 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     name: {
         type: String,
-        require: true
+        required: true
     }, 
     lastname: {
         type: String,
-        require: true
+        required: true
     },
     email: {
         type: String,
-        require: true
+        required: true
     },
     password: {
         type: String,
-        require: true
+        required: true
     },
     birthday: {
         type: Date,
@@ -24,7 +24,7 @@ const userSchema = new Schema({
     points: {
         type: Number,
         default: 0,
-        require: false
+        required: false
     }
 });
 

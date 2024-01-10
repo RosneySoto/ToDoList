@@ -4,11 +4,11 @@ const Schema = mongoose.Schema;
 const wishListSchema = new Schema({
     title: {
         type: String,
-        require: true
+        required: true
     }, 
     detail: {
         type: String,
-        require: true
+        required: true
     },
     createUserId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -17,7 +17,7 @@ const wishListSchema = new Schema({
     points: {
         type: Number,
         default: 0,
-        require: false
+        required: false
     }
 });
 
