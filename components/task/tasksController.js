@@ -5,8 +5,7 @@ const { JWT_SECRET } = process.env;
 const listTask = async (req, res) => {
     try {
         const lisTask = await ContainerTasks.getTask();
-        res.render('index', {lisTask})
-        // res.status(200).json({task: lisTask});
+        res.status(200).json({task: lisTask});
     } catch (error) {
         res.status(500).json({error: 'Error en el controlador'});
         console.log('No se pueden mostrar las tareas');

@@ -15,7 +15,7 @@ const { addWish, deleteWish, updateWish, wishList, getWishbyId } = require('../c
 
 
 //RUTAS DEL COMPONENTE TASK
-router.get('/task', listTask);
+router.get('/task', verifySession, verifyToken, listTask);
 router.get('/task/:id', verifySession, verifyToken, getTaskbyId);
 router.post('/', verifyToken, verifySession, addTask);
 router.patch('/edit/:id', verifySession, verifyToken, updateTask);

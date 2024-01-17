@@ -24,8 +24,12 @@
     "mongodb": "^6.1.0",
     "mongoose": "^7.5.2",
     "passport": "^0.6.0",
+<<<<<<< HEAD
     "passport-local": "^1.0.0",
     "pug": "^3.0.2"
+=======
+    "passport-local": "^1.0.0"
+>>>>>>> f2ce3d5a1a4c16306e3be2dd6255a5aafcf9e06f
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
