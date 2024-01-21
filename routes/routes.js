@@ -13,6 +13,8 @@ const { addUser, getUsers, deleteUser, updateUser, getUserById, loginUser, logou
 
 const { addWish, deleteWish, updateWish, wishList, getWishbyId } = require('../components/wishList/wishListController');
 
+//Importaciones Modulo ShopCar
+const { listAllShop, addToCar } = require('../components/shop/shopController');
 
 //RUTAS DEL COMPONENTE TASK
 router.get('/task', verifySession, verifyToken, listTask);
@@ -46,5 +48,8 @@ router.get('/wish/:id', verifySession, verifyToken, getWishbyId);
 router.post('/wish', verifyToken, verifySession, addWish);
 router.patch('/wishEdit/:id', verifySession, verifyToken, updateWish);
 router.delete('/wishDelete/:id', verifySession, verifyToken, deleteWish);
+
+router.get('/shopCar', listAllShop)
+router.post('/add-shopCar', addToCar)
 
 module.exports = router;

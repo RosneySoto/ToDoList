@@ -6,6 +6,9 @@ const db = require('./db');
 const routes = require('./routes/routes');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const { engine } = require('express-handlebars');
+
+db(process.env.MONGODB_DATABASE);
 
 const app = express();
 
@@ -27,13 +30,21 @@ app.use(session({
     saveUninitialized: true,
 }));
 
+app.engine(
+    'hbs',
+    engine({
+      extname: '.hbs',
+      defaultLayout: 'index.hbs',
+      layoutsDir: __dirname + '/public/views',
+    })
+);
+
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-
-
-db(process.env.MONGODB_DATABASE);
+app.set('views', './public/views');
+app.set('view engine', 'hbs');
 
 app.use('/', routes);
 

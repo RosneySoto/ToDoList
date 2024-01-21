@@ -6,6 +6,7 @@ const listTask = async (req, res) => {
     try {
         const lisTask = await ContainerTasks.getTask();
         res.status(200).json({task: lisTask});
+        // res.render('index');
     } catch (error) {
         res.status(500).json({error: 'Error en el controlador'});
         console.log('No se pueden mostrar las tareas');
