@@ -14,7 +14,7 @@ const { addUser, getUsers, deleteUser, updateUser, getUserById, loginUser, logou
 const { addWish, deleteWish, updateWish, wishList, getWishbyId } = require('../components/wishList/wishListController');
 
 //Importaciones Modulo ShopCar
-const { listAllShop, addToCar } = require('../components/shop/shopController');
+const { listAllShop, addToCar, deleteWishCar } = require('../components/shop/shopController');
 
 //RUTAS DEL COMPONENTE TASK
 router.get('/task', verifySession, verifyToken, listTask);
@@ -51,5 +51,6 @@ router.delete('/wishDelete/:id', verifySession, verifyToken, deleteWish);
 
 router.get('/shopCar', listAllShop)
 router.post('/add-shopCar', addToCar)
+router.patch('/delete-wish/:id', deleteWishCar)
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const shopCarModel = require('../../model/shopCarModel');
 const wishListModel = require('../../model/wishListModel');
 const usersModel = require('../../model/userModel');
+const { ObjectId } = require('mongoose').mongo;
 
 class ContainerShopCar {
     
@@ -37,9 +38,11 @@ class ContainerShopCar {
             if (car) {
                 // Buscar si el producto ya está en el carrito
                 const existingProductIndex = car.items.findIndex(item => item.deseoId.equals(wish.deseoId));
+                console.log('[DATA]' + existingProductIndex);
     
                 if (existingProductIndex !== -1) {
                     // Si el producto ya está en el carrito, actualizar la cantidad y los puntos
+                    //Los corchetes indican la posicion del array
                     car.items[existingProductIndex].amount += wish.amount;
                     car.items[existingProductIndex].total_Points += wish.amount * product.points;
                 } else {
@@ -81,119 +84,52 @@ class ContainerShopCar {
         };
     };
 
-    // static async updateTask(id, updatedTaskData){
-    //     try {
-    //         const updatedTask = await tasksModel.findByIdAndUpdate(id, {
-    //             $set: updatedTaskData
-    //         },{
-    //             new: true
-    //         });
-    //         return updatedTask;
-    //     } catch (error) {
-    //         console.log('[ERROR]-> Error al actualizar la tarea:', error);
-    //     };
-    // };
-
-    // static async deleteTask (id){
-    //     try {
-    //         const taskDelete = await tasksModel.findByIdAndDelete({_id: id});
-    //         return taskDelete;
-    //     } catch (error) {
-    //         console.log('[ERROR] -> Error al eliminar tarea', error);
-    //     };
-    // };
-
-    // static async finishTask(id, createdByUserId) {
-    //     try {
-    //         const resultTask = await tasksModel.findById(id);
+    static async deleteWishCar(deseoId, carId, userId) {
+        try {
+            const car = await shopCarModel.findOne({ _id: carId, userId: userId, isOpen: { $eq: true } });
     
-    //         if (resultTask && resultTask.active === true) {
-
-    //             // Verifica que la tarea no tenga usuario asignados, si no tiene usuarios la puede finalizar cualquier usuario y se le guardan los puntos.
-    //             if(resultTask.assignedUser === null) {
-
-    //                 let updatedTaskComplete = await tasksModel.findByIdAndUpdate(id, {
-    //                     completionDate: Date.now(),
-    //                     active: false,
-    //                     assignedUser: createdByUserId
-    //                 }, { new: true });
-
-    //                 const assignedUserComplete = await usersModel.findByIdAndUpdate(createdByUserId, {
-    //                     $inc: { points: resultTask.pointsTask }
-    //                 }, { new: true });
-
-    //                 return { updatedTaskComplete, assignedUserComplete };
-
-    //             } else {
-    //                 // Verifica que el usuario que intenta finalizar la tarea sea el que la creo, solo el la puede terminar
-    //                 if (createdByUserId != resultTask.userId) {
-    //                     throw new Error('No tienes permisos para finalizar esta tarea');
-    //                 };
+            if (car) {
     
-    //                 let updatedTask = await tasksModel.findByIdAndUpdate(id, {
-    //                     completionDate: Date.now(),
-    //                     active: false
-    //                 }, { new: true });
+                const existingProductIndex = car.items.findIndex(item => item.deseoId.equals(deseoId.deseoId));
     
-    //                 // Incrementa los puntos del usuario asignado
-    //                 const assignedUser = await usersModel.findByIdAndUpdate(resultTask.assignedUser, {
-    //                     $inc: { points: resultTask.pointsTask }
-    //                 }, { new: true });
-        
-    //                 return { updatedTask, assignedUser };
-    //             };
+                if (existingProductIndex !== -1) {
+                    if (car.items[existingProductIndex].amount > 1) {
+                        car.items[existingProductIndex].amount -= 1;
+                        car.items[existingProductIndex].total_Points -= car.items[existingProductIndex].total_Points / (car.items[existingProductIndex].amount + 1);
+                    } else {
+                        // Eliminar el producto del carrito si la cantidad es 1
+                        car.items.splice(existingProductIndex, 1);
+                    }
+    
+                    // Recalcular el totalPoints en tiempo real
+                    car.total_Points_Car = car.items.reduce((total, item) => total + item.total_Points, 0);
+    
+                    // Guardar los cambios en el carrito
+                    return await car.save();
+                } else {
+                    console.log('No se encontró el deseo en el carrito');
+                    return {message: 'No se encontró el deseo en el carrito', car};
+                }
+            } else {
+                console.log('No hay carrito vigente o no existe');
+                return {message: 'El carrito no está vigente o no existe'};
+            }
+        } catch (error) {
+            console.log('[ERROR] -> Error al eliminar deseo del carrito', error);
+            throw error;
+        }
+    }
+    
 
-    //         } else {
-    //             console.log('No se encontraron tareas a modificar');
-    //             return null;
-    //         };
+    static async deleteShopCar (id){
+        try {
+            const shopDelete = await shopCarModel.findByIdAndDelete({_id: id});
+            return shopDelete;
+        } catch (error) {
+            console.log('[ERROR] -> Error al eliminar tarea', error);
+        };
+    };
 
-    //     } catch (error) {
-    //         console.log('[ERROR]-> Error al finalizar la tarea', error);
-    //         throw error;
-    //     }
-    // };
-
-    // static async openTask (id){
-    //     try {
-    //         const resultId = await tasksModel.findById(id);
-
-    //         if(resultId && resultId.active === false){
-    //             let taskId = await tasksModel.findByIdAndUpdate(id, 
-    //                 {active: true},
-    //                 {new: true});
-    //             return { taskId }
-    //         } else {
-    //             console.log('No se encontraron tareas a modificar');
-    //         }
-    //     } catch (error) {
-    //         console.log('[ERROR]-> Error al abrir la tarea', error);
-    //         throw error;
-    //     }
-    // }
-
-    // static async getTaskById (id){
-    //     try {
-    //         if(!id){
-    //             console.log('No se selecciono la tarea');
-    //             return null;
-    //         }
-    //         const task = tasksModel.findById(id)
-    //             .populate({
-    //                 path: 'userId assignedUser priorityId',
-    //                 select: '-_id name lastname'
-    //             });
-    //         if(!task){
-    //             console.log('No se encontro la tarea seleccionada')
-    //             return null;
-    //         } else {
-    //             return task
-    //         }
-    //     } catch (error) {
-    //         console.log('[ERROR]-> Error al buscar tarea por ID', error);
-    //         throw error;
-    //     }
-    // }
 };
 
 module.exports = ContainerShopCar;
