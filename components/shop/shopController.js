@@ -67,9 +67,25 @@ const deleteTask = async (req, res) => {
     };
 };
 
+const processAndPuchaseCar = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const carProcess = await ContainerShopCar.processAndPuchaseCar(id);
+        if(carProcess){
+            res.status(200).json('Canejo los puntos correctamente')
+        } else {
+            res.status(404).json('No se encontro carrito')
+        }
+    } catch (error) {
+        res.status(403).json({error: 'Hubo un error en la compra'});
+        console.log('[ERROR]-> Hubo un error, intente mas tarde', error)
+    };
+};
+
 module.exports = {
     listAllShop,
     addToCar,
     deleteWishCar,
-    deleteTask
+    deleteTask,
+    processAndPuchaseCar
 };

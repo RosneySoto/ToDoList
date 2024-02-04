@@ -1,7 +1,8 @@
 const shopCarModel = require('../../model/shopCarModel');
 const wishListModel = require('../../model/wishListModel');
 const usersModel = require('../../model/userModel');
-const { ObjectId } = require('mongoose').mongo;
+const processCarModel = require('../../model/processCarModel');
+const {enviarMail} = require('../../middleware/nodemailer');
 
 class ContainerShopCar {
     
@@ -118,8 +119,7 @@ class ContainerShopCar {
             console.log('[ERROR] -> Error al eliminar deseo del carrito', error);
             throw error;
         }
-    }
-    
+    };
 
     static async deleteShopCar (id){
         try {
@@ -129,6 +129,104 @@ class ContainerShopCar {
             console.log('[ERROR] -> Error al eliminar tarea', error);
         };
     };
+
+    static async processAndPuchaseCar (idCar){
+        try {
+            //Busca el carrito en la base de datos
+            const car = await shopCarModel.findById(idCar).populate({
+                path: 'items',
+                populate: {
+                    path: 'deseoId',
+                    select: 'title detail points'
+                }
+            });
+
+            const carDetails = {
+                userId: car.userId,
+                total_Points_Car: car.total_Points_Car,
+                items: car.items.map(item => ({
+                    title: item.deseoId.title,
+                    detail: item.deseoId.detail,
+                    points: item.deseoId.points,
+                    amount: item.amount,
+                    total_Points: item.total_Points,
+                    _id: item._id
+                }))
+            };
+
+            if(car.isOpen) {
+                //Recupera el monto total del carrito
+                const totalPointsInCar = car.total_Points_Car;
+    
+                //Busca el usuario asociado al carrito y recupera los puntos.
+                const user = await usersModel.findById(car.userId);
+                const userPoints = user.points;
+    
+                //Validacion para saber si los puntos del usuario con suficientes para hacer la compa
+                if( userPoints >= totalPointsInCar){
+                    const resultPoints = userPoints - totalPointsInCar;
+    
+                    //updatear los puntos del usuario guardar los puntos restados.
+                    const userUpdated = await usersModel.findByIdAndUpdate( user, {
+                        $set: {points: resultPoints}
+                    }, {new: true} );
+
+                    //Cambia el campo de isOpen a false para indicar que el carrito ya se cerro o se compro
+                    await shopCarModel.findByIdAndUpdate( car, {
+                        $set: {isOpen: false}
+                    }, {new: true});
+
+                } else {
+                    throw new Error('No tienes puntos suficientes para canjear');
+                    // console.log('No tienes puntos suficientes para canjear');
+                }
+    
+                // Se crea un objeto y se guarda en la base de datos de carritos procesados
+                const carFinish = new processCarModel({
+                    idCar: car.id,
+                    pointValue: totalPointsInCar,
+                    purchase_date: new Date()
+                });
+    
+                await carFinish.save();
+
+                //Envio de mail al usuario
+                const mailOptions = {
+                from: process.env.APP_MAIL_NODEMAILER, //Se debe crear un mail generico para hacer los envios de los mails a los usuarios
+                to: process.env.APP_MAIL_NODEMAILER,
+                subject: 'Detalles del Carrito de Compras',
+                html: `
+                    <h1>Detalles del carrito:</h1>
+                    <p>Usuario: ${carDetails.userId}</p>
+                    <p>Total de Puntos: ${carDetails.total_Points_Car}</p>
+                    <ul>
+                        ${carDetails.items.map(item => `
+                            <li>
+                                Producto: ${item.title}<br>
+                                Detalle: ${item.detail}<br>
+                                Puntos: ${item.points}<br>
+                                Cantidad: ${item.amount}<br>
+                                Total de Puntos: ${item.total_Points}<br>
+                            </li>
+                        `).join('')}
+                    </ul>
+                `
+            };
+            // Envía el correo electrónico al usuario
+            await enviarMail(mailOptions);
+    
+                return carFinish
+            } else {
+                throw new Error('El carrito está finalizado');
+            };
+
+        } catch (error) {
+            console.log('Error en el servidor');
+            throw error;
+        }
+        
+
+    }
 
 };
 

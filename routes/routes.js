@@ -14,7 +14,7 @@ const { addUser, getUsers, deleteUser, updateUser, getUserById, loginUser, logou
 const { addWish, deleteWish, updateWish, wishList, getWishbyId } = require('../components/wishList/wishListController');
 
 //Importaciones Modulo ShopCar
-const { listAllShop, addToCar, deleteWishCar } = require('../components/shop/shopController');
+const { listAllShop, addToCar, deleteWishCar, processAndPuchaseCar } = require('../components/shop/shopController');
 
 //RUTAS DEL COMPONENTE TASK
 router.get('/task', verifySession, verifyToken, listTask);
@@ -49,8 +49,9 @@ router.post('/wish', verifyToken, verifySession, addWish);
 router.patch('/wishEdit/:id', verifySession, verifyToken, updateWish);
 router.delete('/wishDelete/:id', verifySession, verifyToken, deleteWish);
 
-router.get('/shopCar', listAllShop)
-router.post('/add-shopCar', addToCar)
-router.patch('/delete-wish/:id', deleteWishCar)
+router.get('/shopCar', verifySession, verifyToken, listAllShop)
+router.post('/add-shopCar', verifySession, verifyToken, addToCar)
+router.delete('/delete-wish/:id', verifySession, verifyToken, deleteWishCar)
+router.patch('/buyCar/:id', verifySession, verifyToken, processAndPuchaseCar)
 
 module.exports = router;
