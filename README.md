@@ -1,21 +1,15 @@
 # ToDoList
 
-Esta APP la llamamos MILLAS!!!
+¡Bienvenidos a MILLAS, la aplicación que transforma las tareas cotidianas en un emocionante juego de recompensas!
 
-Conciste en una aplicacion de lista de tareas pero con una divertida rosca de vuelta, es como un juego.
+Imagina una lista de tareas, pero con un toque divertido y un giro inesperado. En lugar de simplemente cumplir con las responsabilidades diarias, MILLAS convierte cada tarea en una oportunidad para ganar puntos y convertirla en una experiencia inolvidable.
 
-La idea principal es que lo puedas hacer en pareja o mas personas, esposos, novios, amigos, rooming, familia, etc. Nuestra idea principal es poder hacer faciles y divertidas las tareas del hogar y tratar de hacer un poco mas sencillas las relaciones con las demas personas en cuanto a organizacion y tareas pendientes.
+La esencia de MILLAS es compartir esta experiencia con tu pareja, amigos, familia o compañeros de cuarto. Porque, ¿quién dijo que las tareas del hogar no pueden ser emocionantes?
 
-¿En que sentido?
+Entonces, aquí está el escenario: conocemos a Pepe y Juanita, una pareja que ha decidido hacer de las tareas cotidianas un juego. Juanita crea una tarea, como cambiar los bombillos de la sala, y le asigna un puntaje de 50 puntos. Pepe recibe la notificación, toma el desafío y ¡voilà!, cambia los bombillos. Cuando completa la tarea, Juanita le otorga esos valiosos puntos.
 
-Muy facil, supongamos que tenemos dos usuarios, son esposos Pepe y Juanita, entonces Juanita crea una tarea nueva y se la asigna Pepe, dicha tarea consta de cambiar los bombillos de la sala, a dicha tarea le asigno un puntaje de 50ptos. A Pepe le llega una notificacion de dicha tarea y cuando tiene un rato libre procede a cambiar los bombillos, al hacerlo Juanita finaliza la tarea y le asigna los putos a Pepe.
+Ahora, ¿qué hacer con esos puntos? La respuesta es sencilla y emocionante a la vez. Los puntos se convierten en millas, matrimillas, monedas o lo que desees llamarles. ¿El resultado? Una moneda de cambio para disfrutar de cosas que te encantan: un desayuno en la cama, una salida con amigos o ese pequeño capricho que has estado deseando.
 
-¿Y que hago con los puntos?
+¿Qué puedes intercambiar con tus millas? ¡Eso depende de ti! Desde experiencias únicas hasta caprichos personales, tú y tu pareja pueden crear una lista de deseos en la aplicación y asignar puntos a cada elemento. Pero, ¡ojo!, la clave está en la comunicación y el razonamiento conjunto. Acuerden los puntajes, negocien y, sobre todo, diviértanse.
 
-Esta es la parte divertida, estos puntos consisten en millas que puedes intercambiar por cosas que quieres o cosas que quieres hacer con tus amigos o solo, las puedes llamar millas, matrimillas, puntos, premios, mondedas, lo quese te ocurra, por ejemplo lo puedes cambiar por un desayuno en la cama, una salida con amigos o algo que quieras comprar y no quieres gastar dinero.
-
-¿Y que cosas puedo cambiar?
-
-Bueno, aca es algo que se debe planear, cada usuario tiene que hacer una lista de deseos desde la app y juntos les asignan los puntos que consideren o negocien.
-
-Quiero destacar que es importante la comunicacion entre las parejas o equipos y un buen raciocinio para una mejor diversion y disfrute, ya que ambos deben acordar los puntajes para cada deseo. Para las tareas que se crean cada usuario puede colocar el puntaje que considere para la misma.
+En resumen, MILLAS no solo transforma las tareas en momentos emocionantes, sino que también fortalece la comunicación y la complicidad entre las parejas y equipos. ¿Listos para convertir las obligaciones diarias en aventuras inolvidables? ¡Descarga MILLAS y comienza a acumular tus propias historias de éxito y diversión!
