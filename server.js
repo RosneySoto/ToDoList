@@ -33,9 +33,9 @@ app.use(session({
 app.engine(
     'hbs',
     engine({
-      extname: '.hbs',
-      defaultLayout: 'index.hbs',
-      layoutsDir: __dirname + '/public/views',
+        extname: '.hbs',
+        defaultLayout: 'index.hbs',
+        layoutsDir: __dirname + '/public/views',
     })
 );
 
