@@ -12,7 +12,7 @@ const authenticate = async (req, res, next) => {
         const user = await ContainerUser.loginUser(email);
         if(!user) {
             console.log('El usuario no existe');
-            return res.status(404).send('El usuario no existe');
+            return res.status(404).json({error: 'Usuario o contraseña incorrecta'});
 
         } else {
 
@@ -25,7 +25,7 @@ const authenticate = async (req, res, next) => {
                 return next();
             } else {
                console.log('Error en el password');
-               return res.status(401).send('Contraseña incorrecta');
+               return res.status(404).json({error: 'Usuario o contraseña incorrecta'});
             }
         }
      } catch (error) {
@@ -75,30 +75,34 @@ const generateToken = async (req, res, next) => {
         id: user.id,
         email: user.email       
     };
-    // console.log(payload);
 
     const token = jwt.sign(payload, JWT_SECRET, {expiresIn: '24h'});
-    console.log(`EL TOKEN ES: ${token}`);
+    res.cookie('token', token, { httpOnly: true, secure: false, maxAge: 24 * 60 * 60 * 1000 });
 
     req.token = token;
+
+    console.log('....' + token); 
+
     next();
 };
 
-
 const verifyToken = async (req, res, next) => {
-    const authHeader = req.headers.authorization;
 
-    if(!authHeader){
-        return res.status(403).send({message: 'No se proporciono token'});
+    // Extraer el token del encabezado Authorization
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; 
+
+    console.log('[Token verificado] ' + token);
+
+    if (!token) {
+        return res.status(403).send({ message: 'No se proporcionó un token' });
     }
 
-    const token = authHeader.split(' ')[1];
-
-    jwt.verify(token, JWT_SECRET, (error, data) =>{
-        if(error){
-            return res.status(401).send({message: 'No estas autorizado token'});
+    jwt.verify(token, JWT_SECRET, (error, data) => {
+        if (error) {
+            return res.status(401).send({ message: 'No estás autorizado' });
         }
-        res.userId = data.email;
+        req.userId = data.email;
         next();
     });
 };
@@ -118,5 +122,5 @@ module.exports = {
     register,
     verifyToken,
     generateToken,
-    verifySession
+    verifySession,
 };

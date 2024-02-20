@@ -22,11 +22,14 @@ const addUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
+
     const {email, password} = req.body
+
     if(!email || !password || email === "" || password === ""){
-        res.status(404).json('Debe ingresar usuario y contraseña')
+        res.status(404).json('Debe ingresar usuario y contraseña');
+
     } else {
-        res.status(200).json({message: 'Usuario logueado exitosamente'});
+        res.status(200).json({ message: 'Usuario logueado exitosamente', token: req.token });
     };
 };
 

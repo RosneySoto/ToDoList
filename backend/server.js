@@ -7,13 +7,22 @@ const routes = require('./routes/routes');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const { engine } = require('express-handlebars');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 db(process.env.MONGODB_DATABASE);
 
 const app = express();
 
+// se le indica al backend que url del front se permite
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
+
 app.use(express.json());
 
+app.use(cookieParser());
 app.use(session({
     store: MongoStore.create({
         mongoUrl: process.env.MONGODB_DATABASE,
@@ -21,7 +30,7 @@ app.use(session({
     }),
     secret: 'secreto',
     cookie: {
-        httpOnly: false,
+        httpOnly: true,
         secure: false,
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
     },
@@ -30,23 +39,17 @@ app.use(session({
     saveUninitialized: true,
 }));
 
-app.engine(
-    'hbs',
-    engine({
-        extname: '.hbs',
-        defaultLayout: 'index.hbs',
-        layoutsDir: __dirname + '/public/views',
-    })
-);
-
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.set('views', './public/views');
-app.set('view engine', 'hbs');
-
 app.use('/', routes);
+
+app.get('/', (req, res) => {
+    res.send({
+        users: []
+    });
+});
 
 app.listen(PORT, function(){
     console.log(`conectado al puerto ${PORT}`);
