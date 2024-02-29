@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import LoginCard from './LoginCard';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import {jwt_decode} from 'jsonwebtoken';
 
 
 function LoginPage() {
@@ -11,12 +12,16 @@ function LoginPage() {
 
   const handleLoginSubmit = async ({ email, password }) => {
     try {
-      const response = await axios.post('http://localhost:8080/login', { email, password });      
-      console.log('DATA: ' + response.data.token);
+      const response = await axios.post('http://localhost:8080/login', { email, password });
+
+      // Obtener el id del usuario desde el token decodificado
+      const decodedToken = jwt_decode(token);
+      const userId = decodedToken.id;
 
       const token = response.data.token; // Suponiendo que el token está en la respuesta del backend
-      console.log('EL TOKEN RECIBIDO ES: ' + token );
+      // console.log('EL TOKEN RECIBIDO ES: ' + token );
       Cookies.set('token', token, { secure: false }); // Establecer la cookie con el token
+      Cookies.set('userId', userId, { secure: false });
   
       // Si el inicio de sesión es exitoso, redirige al usuario a la vista de ToDo
       navigate('/task'); 
@@ -28,12 +33,14 @@ function LoginPage() {
   };
 
   return (
-    <div className="container">
-      <h2>Login Page</h2>
-      {error && <div className="alert alert-danger">{error}</div>}
-      <LoginCard onSubmit={handleLoginSubmit} />
+    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+      <div className="card p-4">
+        <h2 className="text-center mb-4" style={{paddingBottom: '40px', paddingTop: '10px'}}>Bienvenido!</h2>
+        {error && <div className="alert alert-danger">{error}</div>}
+        <LoginCard onSubmit={handleLoginSubmit} />
+      </div>
     </div>
-  );
+);
 }
 
 export default LoginPage;

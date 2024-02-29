@@ -81,7 +81,7 @@ const generateToken = async (req, res, next) => {
 
     req.token = token;
 
-    console.log('....' + token); 
+    // console.log('....' + token); 
 
     next();
 };
@@ -92,7 +92,7 @@ const verifyToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; 
 
-    console.log('[Token verificado] ' + token);
+    // console.log('[Token verificado] ' + token);
 
     if (!token) {
         return res.status(403).send({ message: 'No se proporcionó un token' });

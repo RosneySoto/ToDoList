@@ -11,32 +11,33 @@ export default function LoginCard({ onSubmit }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="exampleInputEmail1">Email address</label>
+    <form onSubmit={handleSubmit} className="w-100">
+
+      <div className="form-group" style={{paddingBottom: '20px'}}>
+        <label htmlFor="exampleInputEmail1">Correo Electronico</label>
         <input 
           type="email" 
           className="form-control" 
           id="exampleInputEmail1" 
           aria-describedby="emailHelp" 
-          placeholder="Enter email" 
+          placeholder="Ingresa tu email" 
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
       </div>
-      <div className="form-group">
+
+      <div className="form-group" style={{paddingBottom: '20px'}}>
         <label htmlFor="exampleInputPassword1">Password</label>
         <input 
           type="password" 
           className="form-control" 
           id="exampleInputPassword1" 
-          placeholder="Password" 
+          placeholder="Ingresa tu clave megasecreta" 
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <button type="submit" className="btn btn-primary">Submit</button>
+      <button type="submit" className="btn btn-primary w-100">Iniciar Sesion</button>
     </form>
-  );
+);
 };

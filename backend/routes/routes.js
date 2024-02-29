@@ -20,14 +20,15 @@ const { listAllShop, addToCar, deleteWishCar, processAndPuchaseCar } = require('
 // router.get('/task', listTask);
 router.get('/task', verifyToken, listTask);
 router.get('/task/:id', verifySession, verifyToken, getTaskbyId);
-router.post('/', verifyToken, verifySession, addTask);
+router.post('/task', verifyToken, addTask);
 router.patch('/edit/:id', verifySession, verifyToken, updateTask);
 router.delete('/delete/:id', verifySession, verifyToken, deleteTask);
 router.put('/finish/:id', verifySession, verifyToken, finishTask);
 router.put('/openTask/:id', verifySession, verifyToken, openTask);
 
 //RUTAS DEL COMPONENTE PRIORITY
-router.get('/priority', verifySession, verifyToken, listPriority);
+// router.get('/priority', verifySession, verifyToken, listPriority);
+router.get('/priority', listPriority);
 router.get('/priority/:id', verifySession, verifyToken, getTaskByPriority);
 router.post('/addPriority', verifySession, verifyToken, addPriority);
 
@@ -35,7 +36,8 @@ router.post('/addPriority', verifySession, verifyToken, addPriority);
 router.get('/login', getLoginUser);
 router.post('/login', authenticate, generateToken, loginUser);
 router.post('/user', register, addUser);
-router.get('/user', verifySession, verifyToken, getUsers);
+router.get('/user', getUsers);
+// router.get('/user', verifySession, verifyToken, getUsers);
 router.get('/user/:id', verifySession, verifyToken, getUserById);
 router.get('/user/tasklist/:id', verifySession, verifyToken, getTaskByUserId);
 router.delete('/user/:id', verifySession, verifyToken, deleteUser);
