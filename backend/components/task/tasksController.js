@@ -43,6 +43,7 @@ const updateTask = async (req, res) => {
     try {
         const updatedTask = await ContainerTasks.updateTask(id, taskUpdate);
         res.status(200).json({taskUpdate: updatedTask});
+        console.log(updatedTask);
     } catch (error) {
         console.log('Error al editar la tarea', error);
         res.status(500).json({ error: 'Error al actualizar la tarea' });

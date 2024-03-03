@@ -5,36 +5,82 @@ import Cookies from 'js-cookie';
 import { Container, Row, Col, Button, Modal, Form } from 'react-bootstrap';
 
 const ToDoList = () => {
+
   const [tasks, setTasks] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+
   const [formData, setFormData] = useState({
     title: '',
     detail: '',
     assignedUser: '',
   });
+
+  const [editFormData, setEditFormData] = useState({
+    title: '',
+    detail: '',
+    assignedUser: '',
+  });
+
   const [priorities, setPriorities] = useState([]);
   const [users, setUsers] = useState([]);
+  const [selectedTask, setSelectedTask] = useState(null);
 
-  const handleModalClose = () => setShowModal(false);
+  const handleModalClose = () => {
+    setShowModal(false);
+    setShowEditModal(false);
+  };
 
   const handleCreateTask = async () => {
     try {
       const token = Cookies.get('token');
-      const userId = Cookies.get('userId'); // Obtener el userId del usuario logueado
+      const userId = Cookies.get('userId');
 
       const response = await axios.post('http://localhost:8080/task', {
         ...formData,
-        userId: userId, // Agregar el userId a los datos de la tarea
+        userId: userId,
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      setShowModal(false);
+      handleModalClose();
       fetchTasks();
     } catch (error) {
       console.error('Error creating task:', error);
+    }
+  };
+
+  const handleEditClick = (task) => {
+    setSelectedTask(task);
+    setEditFormData({
+      title: task.title,
+      detail: task.detail,
+      assignedUser: task.assignedUser._id,
+      priorityId: task.priorityId._id,
+      pointsTask: task.pointsTask,
+    });
+    setShowEditModal(true);
+  };
+
+  /////////////////////////////////////////////////////////
+
+  const handleSaveEdit = async () => {
+    try {
+      const token = Cookies.get('token');
+      console.log('[TOKEN AL EDITAR ]' + token);
+      const response = await axios.patch(`http://localhost:8080/task/edit/${selectedTask._id}`, editFormData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+
+      handleModalClose();
+      fetchTasks();
+    } catch (error) {
+      console.error('Error updating task:', error);
     }
   };
 
@@ -86,18 +132,23 @@ const ToDoList = () => {
     fetchUsers();
   }, []);
 
+
   return (
     <Container>
+
       <h2>Lista de Tareas</h2>
       <Button variant="primary" onClick={() => setShowModal(true)} style={{ margin: '10px' }}>Crear una tarea nueva</Button>
+
       <Row xs={1} md={2} lg={4} className="g-4">
+        {/* Mapeo de tareas para renderizar ToDoCard */}
         {tasks.map((task, index) => (
           <Col key={index}>
-            <ToDoCard task={task} />
+            <ToDoCard task={task} onEditClick={handleEditClick} />
           </Col>
         ))}
       </Row>
 
+      {/* MODAL PARA CREAR UNA NUEVA TAREA */}
       <Modal show={showModal} onHide={handleModalClose}>
         <Modal.Header closeButton>
           <Modal.Title>Nueva Tarea</Modal.Title>
@@ -138,8 +189,8 @@ const ToDoList = () => {
 
             <Form.Group controlId="formPriority">
               <Form.Label>Prioridad</Form.Label>
-              <Form.Control 
-                as="select" value={formData.prioritId} 
+              <Form.Control
+                as="select" value={formData.prioritId}
                 onChange={(e) => setFormData({ ...formData, priorityId: e.target.value })}>
                 <option value="">Seleccione una prioridad</option>
                 {Array.isArray(priorities) && priorities.map((priority) => (
@@ -171,6 +222,94 @@ const ToDoList = () => {
           </Form>
         </Modal.Body>
       </Modal>
+      {/* FIN DEL MODAL PARA CREAR UNA NUEVA TAREA */}
+
+
+      {/* MODAL PARA EDITAR UNA TAREA */}
+      <Modal show={showEditModal} onHide={handleModalClose}>
+
+        <Modal.Header closeButton>
+          <Modal.Title>Editar Tarea</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <Form>
+
+            <Form.Group controlId="formTitle">
+              <Form.Label>Título</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ingrese el título"
+                value={editFormData.title}
+                onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formDetail">
+              <Form.Label>Detalle</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Ingrese el detalle"
+                value={editFormData.detail}
+                onChange={(e) => setEditFormData({ ...editFormData, detail: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formPoints">
+              <Form.Label>Puntos</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Ingrese los puntos"
+                value={editFormData.pointsTask}
+                onChange={(e) => setEditFormData({ ...editFormData, pointsTask: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formPriority">
+              <Form.Label>Prioridad</Form.Label>
+                <Form.Control
+                  as="select" 
+                  value={editFormData.priorityId}
+                  onChange={(e) => setEditFormData({ ...editFormData, priorityId: e.target.value })}>
+                  
+                  <option value="">Seleccione una prioridad</option>
+                  {Array.isArray(priorities) && priorities.map((priority) => (
+                    <option key={priority._id} value={priority._id}>
+                      {priority.name}
+                    </option>
+                  ))}
+                </Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="formAssignedUser">
+              <Form.Label>Usuario asignado</Form.Label>
+              <Form.Control
+                as="select"
+                value={editFormData.assignedUser}
+                onChange={(e) => setEditFormData({ ...editFormData, assignedUser: e.target.value })}>
+
+                <option value="">Seleccione un usuario</option>
+                {Array.isArray(users) && users.map((user) => (
+                    <option key={user._id} value={user._id}>
+                      {user.name} {user.lastname}
+                    </option>
+                  ))}
+              </Form.Control>
+            </Form.Group>
+
+          </Form>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleModalClose}>Cancelar</Button>
+          <Button variant="primary" onClick={() => handleSaveEdit(selectedTask)}>Guardar Cambios</Button>
+        </Modal.Footer>
+
+      </Modal>
+      {/* FIN DEL MODAL PARA EDITAR UNA TAREA */}
+
+
     </Container>
   );
 };

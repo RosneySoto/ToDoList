@@ -1,5 +1,5 @@
 const express = require('express');
-const { authenticate, register, verifyToken,generateToken, verifySession } = require('../middleware/auth');
+const { authenticate, register, verifyToken,generateToken } = require('../middleware/auth');
 const router = express.Router();
 
 //Importaciones Modulo Task
@@ -17,44 +17,41 @@ const { addWish, deleteWish, updateWish, wishList, getWishbyId } = require('../c
 const { listAllShop, addToCar, deleteWishCar, processAndPuchaseCar } = require('../components/shop/shopController');
 
 //RUTAS DEL COMPONENTE TASK
-// router.get('/task', listTask);
 router.get('/task', verifyToken, listTask);
-router.get('/task/:id', verifySession, verifyToken, getTaskbyId);
+router.get('/task/:id', verifyToken, getTaskbyId);
 router.post('/task', verifyToken, addTask);
-router.patch('/edit/:id', verifySession, verifyToken, updateTask);
-router.delete('/delete/:id', verifySession, verifyToken, deleteTask);
-router.put('/finish/:id', verifySession, verifyToken, finishTask);
-router.put('/openTask/:id', verifySession, verifyToken, openTask);
+router.patch('/task/edit/:id', verifyToken, updateTask);
+router.delete('/delete/:id', verifyToken, deleteTask);
+router.put('/finish/:id', verifyToken, finishTask);
+router.put('/openTask/:id', verifyToken, openTask);
 
 //RUTAS DEL COMPONENTE PRIORITY
 router.get('/priority', verifyToken, listPriority);
-// router.get('/priority', listPriority);
-router.get('/priority/:id', verifySession, verifyToken, getTaskByPriority);
-router.post('/addPriority', verifySession, verifyToken, addPriority);
+router.get('/priority/:id', verifyToken, getTaskByPriority);
+router.post('/addPriority', verifyToken, addPriority);
 
 //RUTAS DEL COMPONENTE USER+
 router.get('/login', getLoginUser);
 router.post('/login', authenticate, generateToken, loginUser);
 router.post('/user', register, addUser);
 router.get('/user', getUsers);
-// router.get('/user', verifySession, verifyToken, getUsers);
-router.get('/user/:id', verifySession, verifyToken, getUserById);
-router.get('/user/tasklist/:id', verifySession, verifyToken, getTaskByUserId);
-router.delete('/user/:id', verifySession, verifyToken, deleteUser);
-router.put('/user/:id', verifySession, verifyToken, updateUser);
-router.get('/logout', verifySession, verifyToken, logoutUser);
+router.get('/user/:id', verifyToken, getUserById);
+router.get('/user/tasklist/:id', verifyToken, getTaskByUserId);
+router.delete('/user/:id', verifyToken, deleteUser);
+router.put('/user/:id', verifyToken, updateUser);
+router.get('/logout', verifyToken, logoutUser);
 router.put('/pass', updatePass);
 
 //RUTAS DEL COMPONENTE WISH-LIST
-router.get('/wish', verifySession, verifyToken, wishList);
-router.get('/wish/:id', verifySession, verifyToken, getWishbyId);
-router.post('/wish', verifyToken, verifySession, addWish);
-router.patch('/wishEdit/:id', verifySession, verifyToken, updateWish);
-router.delete('/wishDelete/:id', verifySession, verifyToken, deleteWish);
+router.get('/wish', verifyToken, wishList);
+router.get('/wish/:id', verifyToken, getWishbyId);
+router.post('/wish', verifyToken, addWish);
+router.patch('/wishEdit/:id', verifyToken, updateWish);
+router.delete('/wishDelete/:id', verifyToken, deleteWish);
 
-router.get('/shopCar', verifySession, verifyToken, listAllShop)
-router.post('/add-shopCar', verifySession, verifyToken, addToCar)
-router.delete('/delete-wish/:id', verifySession, verifyToken, deleteWishCar)
-router.patch('/buyCar/:id', verifySession, verifyToken, processAndPuchaseCar)
+router.get('/shopCar', verifyToken, listAllShop)
+router.post('/add-shopCar', verifyToken, addToCar)
+router.delete('/delete-wish/:id', verifyToken, deleteWishCar)
+router.patch('/buyCar/:id', verifyToken, processAndPuchaseCar)
 
 module.exports = router;
