@@ -10,8 +10,6 @@ const ToDoList = () => {
   const [formData, setFormData] = useState({
     title: '',
     detail: '',
-    points: '',
-    priority: '',
     assignedUser: '',
   });
   const [priorities, setPriorities] = useState([]);
@@ -23,9 +21,6 @@ const ToDoList = () => {
     try {
       const token = Cookies.get('token');
       const userId = Cookies.get('userId'); // Obtener el userId del usuario logueado
-      
-      console.log(token);
-      console.log(userId);
 
       const response = await axios.post('http://localhost:8080/task', {
         ...formData,
@@ -35,6 +30,7 @@ const ToDoList = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+
       setShowModal(false);
       fetchTasks();
     } catch (error) {
@@ -135,14 +131,16 @@ const ToDoList = () => {
               <Form.Control
                 type="number"
                 placeholder="Ingrese los puntos"
-                value={formData.points}
-                onChange={(e) => setFormData({ ...formData, points: e.target.value })}
+                value={formData.pointsTask}
+                onChange={(e) => setFormData({ ...formData, pointsTask: e.target.value })}
               />
             </Form.Group>
 
             <Form.Group controlId="formPriority">
               <Form.Label>Prioridad</Form.Label>
-              <Form.Control as="select" value={formData.priority} onChange={(e) => setFormData({ ...formData, priority: e.target.value })}>
+              <Form.Control 
+                as="select" value={formData.prioritId} 
+                onChange={(e) => setFormData({ ...formData, priorityId: e.target.value })}>
                 <option value="">Seleccione una prioridad</option>
                 {Array.isArray(priorities) && priorities.map((priority) => (
                   <option key={priority._id} value={priority._id}>{priority.name}</option>

@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import LoginCard from './LoginCard';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import {jwt_decode} from 'jsonwebtoken';
+import {jwtDecode} from 'jwt-decode';
+
 
 
 function LoginPage() {
@@ -14,20 +15,16 @@ function LoginPage() {
     try {
       const response = await axios.post('http://localhost:8080/login', { email, password });
 
-      // Obtener el id del usuario desde el token decodificado
-      const decodedToken = jwt_decode(token);
+      const token = response.data.token; // Obtener el token de la respuesta del backend
+      const decodedToken = jwtDecode(token);
       const userId = decodedToken.id;
-
-      const token = response.data.token; // Suponiendo que el token está en la respuesta del backend
-      // console.log('EL TOKEN RECIBIDO ES: ' + token );
-      Cookies.set('token', token, { secure: false }); // Establecer la cookie con el token
+      
+      Cookies.set('token', token, { secure: false });
       Cookies.set('userId', userId, { secure: false });
   
-      // Si el inicio de sesión es exitoso, redirige al usuario a la vista de ToDo
-      navigate('/task'); 
+      navigate('/task'); // Redirigir al usuario a la vista de Tareas si el inicio de sesión es exitoso
     } catch (error) {
       console.error('Error:', error);
-      // Maneja errores de inicio de sesión
       setError(error.response.data.error);
     }
   };
@@ -35,12 +32,12 @@ function LoginPage() {
   return (
     <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
       <div className="card p-4">
-        <h2 className="text-center mb-4" style={{paddingBottom: '40px', paddingTop: '10px'}}>Bienvenido!</h2>
+        <h2 className="text-center mb-4" style={{ paddingBottom: '40px', paddingTop: '10px' }}>Bienvenido!</h2>
         {error && <div className="alert alert-danger">{error}</div>}
         <LoginCard onSubmit={handleLoginSubmit} />
       </div>
     </div>
-);
+  );
 }
 
 export default LoginPage;
