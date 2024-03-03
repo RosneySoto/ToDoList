@@ -27,8 +27,8 @@ router.put('/finish/:id', verifySession, verifyToken, finishTask);
 router.put('/openTask/:id', verifySession, verifyToken, openTask);
 
 //RUTAS DEL COMPONENTE PRIORITY
-// router.get('/priority', verifySession, verifyToken, listPriority);
-router.get('/priority', listPriority);
+router.get('/priority', verifyToken, listPriority);
+// router.get('/priority', listPriority);
 router.get('/priority/:id', verifySession, verifyToken, getTaskByPriority);
 router.post('/addPriority', verifySession, verifyToken, addPriority);
 

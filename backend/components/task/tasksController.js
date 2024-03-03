@@ -16,6 +16,7 @@ const listTask = async (req, res) => {
 const addTask = async (req, res) => {
     try {
         const newTask = req.body;
+        console.log(newTask);
         if(!newTask){
             res.status(404).json('No se registro tarea')
         } else {
@@ -23,6 +24,8 @@ const addTask = async (req, res) => {
             // Decodificar el token para obtener el ID del usuario
             const decodedToken = jwt.verify(token, JWT_SECRET);
             const userId = decodedToken.id;
+
+            newTask.userId = userId;
 
             taskSave = await ContainerTasks.addTask(newTask, userId);
         }
