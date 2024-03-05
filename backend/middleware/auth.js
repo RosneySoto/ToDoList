@@ -73,6 +73,8 @@ const generateToken = async (req, res, next) => {
 
     const payload = {
         id: user.id,
+        name: user.name,
+        lastname: user.lastname,
         email: user.email       
     };
 

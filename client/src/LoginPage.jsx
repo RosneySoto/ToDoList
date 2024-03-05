@@ -18,9 +18,13 @@ function LoginPage() {
       const token = response.data.token; // Obtener el token de la respuesta del backend
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.id;
+      const userName = decodedToken.name;
+      const userLastname = decodedToken.lastname;
       
       Cookies.set('token', token, { secure: false });
       Cookies.set('userId', userId, { secure: false });
+      Cookies.set('userName', userName, { secure: false });
+      Cookies.set('userLastname', userLastname, { secure: false });
   
       navigate('/task'); // Redirigir al usuario a la vista de Tareas si el inicio de sesión es exitoso
     } catch (error) {

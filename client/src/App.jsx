@@ -1,18 +1,27 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-// import LoginCard from './LoginCard.jsx';
-import LoginPage from './LoginPage.jsx'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LoginPage from './LoginPage.jsx';
 import ToDoList from './ToDoList.jsx';
+import Sidebar from './SideBar.jsx';
+import PrivateRoute from './PrivateRoute.jsx';
 
-//RENDERIZA LAS RUTAS Y LAS PAGINAS 
 export default function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/task" element={<ToDoList />} />
+        <Route path="/task" element={<TaskPage />} />
       </Routes>
     </Router>
   );
-};
+}
+
+function TaskPage() {
+  return (
+    <div style={{ display: 'flex' }}>
+      <Sidebar />
+      <ToDoList />
+    </div>
+  );
+}
 
