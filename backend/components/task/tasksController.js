@@ -54,6 +54,7 @@ const deleteTask = async (req, res) => {
     const id = req.params.id;
     try {
         const taskDelete = await ContainerTasks.deleteTask(id)
+        console.log(taskDelete);
         res.status(200).json('Tarea eliminada correctamente')
     } catch (error) {
         res.status(500).json({error: 'Error en el controlador'});
@@ -63,7 +64,9 @@ const deleteTask = async (req, res) => {
 
 const finishTask = async (req, res) => {
     const taskId = req.params.id;
-    const createdByUserId = req.session.user.id;
+    console.log('[ID ES] => ' + taskId);
+    // const createdByUserId = req.session.user.id;
+    const createdByUserId = req.userId;
     console.log(createdByUserId);
 
     try {

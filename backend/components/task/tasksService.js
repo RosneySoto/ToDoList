@@ -81,9 +81,9 @@ class ContainerTasks {
 
                 } else {
                     // Verifica que el usuario que intenta finalizar la tarea sea el que la creo, solo el la puede terminar
-                    if (createdByUserId != resultTask.userId) {
-                        throw new Error('No tienes permisos para finalizar esta tarea');
-                    };
+                    // if (createdByUserId != resultTask.userId) {
+                    //     throw new Error('No tienes permisos para finalizar esta tarea');
+                    // };
     
                     let updatedTask = await tasksModel.findByIdAndUpdate(id, {
                         completionDate: Date.now(),

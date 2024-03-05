@@ -21,9 +21,9 @@ router.get('/task', verifyToken, listTask);
 router.get('/task/:id', verifyToken, getTaskbyId);
 router.post('/task', verifyToken, addTask);
 router.patch('/task/edit/:id', verifyToken, updateTask);
-router.delete('/delete/:id', verifyToken, deleteTask);
-router.put('/finish/:id', verifyToken, finishTask);
-router.put('/openTask/:id', verifyToken, openTask);
+router.delete('/task/delete/:id', verifyToken, deleteTask);
+router.put('/task/finish/:id', verifyToken, finishTask);
+router.put('/task/openTask/:id', verifyToken, openTask);
 
 //RUTAS DEL COMPONENTE PRIORITY
 router.get('/priority', verifyToken, listPriority);

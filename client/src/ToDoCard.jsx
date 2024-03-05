@@ -1,7 +1,11 @@
 import { Card, Button, Badge } from 'react-bootstrap';
 
-function ToDoCard({ task, onEditClick }) {
-  // console.log(task);
+function ToDoCard({ task, onEditClick, onToggleStatus, onDeleteClick }) {
+
+  const toggleStatus = () => {
+    onToggleStatus(task._id, task.active);
+  };
+
   return (
     <Card style={{ width: '18rem' }}>
       <Card.Body>
@@ -16,13 +20,14 @@ function ToDoCard({ task, onEditClick }) {
             <i className="bi bi-pencil-square"></i>
           </Button>
 
-          <Button variant="success" style={{ marginLeft: '5px' }} name="finalizar">
-            <i className="bi bi-check2-square"></i>
+          <Button variant="success" style={{ marginLeft: '5px' }} onClick={toggleStatus}>
+            {task.active ? <i className="bi bi-check2-square"></i> : <i className="bi bi-clipboard2-x"></i>}
           </Button>
 
-          <Button variant="danger" style={{ marginLeft: '5px' }} name="borrar">
+          <Button variant="danger" style={{ marginLeft: '5px' }} onClick={() => onDeleteClick(task._id)}>
             <i className="bi bi-trash3"></i>
           </Button>
+
 
         </div>
 
@@ -45,5 +50,3 @@ function ToDoCard({ task, onEditClick }) {
 }
 
 export default ToDoCard;
-
-

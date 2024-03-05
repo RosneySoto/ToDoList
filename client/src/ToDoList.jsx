@@ -64,8 +64,6 @@ const ToDoList = () => {
     setShowEditModal(true);
   };
 
-  /////////////////////////////////////////////////////////
-
   const handleSaveEdit = async () => {
     try {
       const token = Cookies.get('token');
@@ -75,7 +73,6 @@ const ToDoList = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
 
       handleModalClose();
       fetchTasks();
@@ -83,6 +80,28 @@ const ToDoList = () => {
       console.error('Error updating task:', error);
     }
   };
+
+  const handleToggleStatus = async (taskId, isActive) => {
+    try {
+      const token = Cookies.get('token');
+      if (isActive) {
+        await axios.put(`http://localhost:8080/task/finish/${taskId}`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      } else {
+        await axios.put(`http://localhost:8080/task/openTask/${taskId}`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+      fetchTasks();
+    } catch (error) {
+      console.error('Error toggling task status:', error);
+    }
+  };  
 
   const fetchTasks = async () => {
     try {
@@ -97,6 +116,20 @@ const ToDoList = () => {
       console.error('Error fetching tasks:', error);
     }
   };
+
+  const handleDeleteTask = async (taskId) => {
+    try {
+      const token = Cookies.get('token');
+      await axios.delete(`http://localhost:8080/task/delete/${taskId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      fetchTasks();
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
+  };  
 
   const fetchPriorities = async () => {
     try {
@@ -143,7 +176,7 @@ const ToDoList = () => {
         {/* Mapeo de tareas para renderizar ToDoCard */}
         {tasks.map((task, index) => (
           <Col key={index}>
-            <ToDoCard task={task} onEditClick={handleEditClick} />
+            <ToDoCard task={task} onEditClick={handleEditClick} onToggleStatus={handleToggleStatus} onDeleteClick={handleDeleteTask}/>
           </Col>
         ))}
       </Row>
