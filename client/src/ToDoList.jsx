@@ -119,17 +119,21 @@ const ToDoList = () => {
 
   const handleDeleteTask = async (taskId) => {
     try {
-      const token = Cookies.get('token');
-      await axios.delete(`http://localhost:8080/task/delete/${taskId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      fetchTasks();
+      const confirmed = window.confirm('¿Estás seguro de eliminar esta tarea?');
+      if (confirmed) {
+        const token = Cookies.get('token');
+        await axios.delete(`http://localhost:8080/task/delete/${taskId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        fetchTasks();
+      }
     } catch (error) {
       console.error('Error deleting task:', error);
     }
-  };  
+  };
+  
 
   const fetchPriorities = async () => {
     try {
