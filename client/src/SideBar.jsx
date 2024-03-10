@@ -1,20 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Nav } from 'react-bootstrap';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
 const Sidebar = () => {
-  const userName = Cookies.get('userName'); // Obtiene el nombre de usuario de las cookies
-  const userLastname = Cookies.get('userLastname'); // Obtiene el nombre de usuario de las cookies
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    // Obtiene el ID del usuario del token
+    const userId = Cookies.get('userId');
+    if (userId) {
+      axios.get(`http://localhost:8080/user/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+      })
+      .then(response => {
+        setUserData(response.data.userById);
+      })
+      .catch(error => {
+        console.error('Error obteniendo datos del usuario:', error);
+      });
+    }
+  }, []);
 
   return (
     <Nav className="flex-column" style={{ backgroundColor: '#dcdcdc'}}>
-        
-      <Nav.Item>
-        <Nav.Link disabled>{userName} {userLastname}</Nav.Link>
-      </Nav.Item>
+      {userData && (
+        <Nav.Item>
+          <Nav.Link disabled>{userData.name} {userData.lastname}</Nav.Link>
+          <Nav.Link disabled>Millas Actuales: {userData.points}</Nav.Link>
+        </Nav.Item>
+      )}
 
       <Nav.Item>
-        <Nav.Link>Ver mi Perfil</Nav.Link>
+      <Nav.Link href="/profile">Ver mi Perfil</Nav.Link>
       </Nav.Item>
 
       <Nav.Item>
@@ -25,6 +45,13 @@ const Sidebar = () => {
         <Nav.Link>Ver mi Carrito de compras</Nav.Link>
       </Nav.Item>
 
+      <Nav.Item>
+        <Nav.Link>Mi grupo</Nav.Link>
+      </Nav.Item>
+
+      <Nav.Item>
+        <Nav.Link>Cerrar Sesion</Nav.Link>
+      </Nav.Item>
     </Nav>
   );
 };

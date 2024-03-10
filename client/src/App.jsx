@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './LoginPage.jsx';
 import ToDoList from './ToDoList.jsx';
 import Sidebar from './SideBar.jsx';
-import PrivateRoute from './PrivateRoute.jsx';
+import ProfilePage from './ProfilePage.jsx'
 
 export default function App() {
   return (
@@ -11,6 +11,7 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/task" element={<TaskPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </Router>
   );

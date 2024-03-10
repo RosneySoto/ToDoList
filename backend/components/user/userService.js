@@ -53,12 +53,13 @@ class ContainerUser {
             console.log('[ERROR]-> Error al eliminar los usuarios', error);
             throw error;
         };
-    };
+    };    
 
     static async updateUser (id, user){
         try {
-            const { name, lastname, email, password, birthday } = user
-            if(!name || !lastname || !email || !password || !birthday){
+            const { name, lastname, email, birthday } = user;
+
+            if(!name || !lastname || !email || !birthday){
                 console.log('[ERROR]-> Faltan datos del usuario');
                 return null;
             }
