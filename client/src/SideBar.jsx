@@ -38,7 +38,7 @@ const Sidebar = () => {
       </Nav.Item>
 
       <Nav.Item>
-        <Nav.Link>Ver mis deseos</Nav.Link>
+        <Nav.Link href="/wish">Ver mis deseos</Nav.Link>
       </Nav.Item>
 
       <Nav.Item>

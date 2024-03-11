@@ -64,7 +64,7 @@ const ProfilePage = () => {
   return (
 
     <div>
-      <SideBar />
+      {/* <SideBar /> */}
       
       <div className="container">
         <h2>Perfil de Usuario</h2>
