@@ -3,6 +3,7 @@ const wishListModel = require('../../model/wishListModel');
 const usersModel = require('../../model/userModel');
 const processCarModel = require('../../model/processCarModel');
 const {enviarMail} = require('../../middleware/nodemailer');
+const mongoose = require('mongoose');
 
 class ContainerShopCar {
     
@@ -28,7 +29,8 @@ class ContainerShopCar {
 
     static async addToCar(wish, userId) {
         try {
-            const product = await wishListModel.findById(wish.deseoId);
+            const wishId = new mongoose.Types.ObjectId(wish.deseoId);
+            const product = await wishListModel.findById(wishId);
     
             if (!product) {
                 throw new Error('Producto no encontrado en la lista de deseos');
@@ -39,7 +41,6 @@ class ContainerShopCar {
             if (car) {
                 // Buscar si el producto ya está en el carrito
                 const existingProductIndex = car.items.findIndex(item => item.deseoId.equals(wish.deseoId));
-                console.log('[DATA]' + existingProductIndex);
     
                 if (existingProductIndex !== -1) {
                     // Si el producto ya está en el carrito, actualizar la cantidad y los puntos
