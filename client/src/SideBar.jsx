@@ -34,6 +34,10 @@ const Sidebar = () => {
       )}
 
       <Nav.Item>
+        <Nav.Link href="/task">Ver las tareas</Nav.Link>
+      </Nav.Item>
+
+      <Nav.Item>
       <Nav.Link href="/profile">Ver mi Perfil</Nav.Link>
       </Nav.Item>
 
@@ -42,7 +46,7 @@ const Sidebar = () => {
       </Nav.Item>
 
       <Nav.Item>
-        <Nav.Link>Ver mi Carrito de compras</Nav.Link>
+        <Nav.Link href="/cart">Ver mi Carrito de compras</Nav.Link>
       </Nav.Item>
 
       <Nav.Item>

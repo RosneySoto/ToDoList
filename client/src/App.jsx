@@ -4,7 +4,8 @@ import LoginPage from './LoginPage.jsx';
 import ToDoList from './ToDoList.jsx';
 import Sidebar from './SideBar.jsx';
 import ProfilePage from './ProfilePage.jsx'
-import WishPage from './WishList.jsx'
+import WishPage from './WishList.jsx';
+import ShopCart from './ShopCartList.jsx'
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/task" element={<TaskPage />} />
         <Route path="/profile" element={<ProfileUserPage />} />
         <Route path="/wish" element={<WishsPage />} />
+        <Route path="/cart" element={<ShopCartPage />} />
       </Routes>
     </Router>
   );
@@ -26,7 +28,7 @@ function TaskPage() {
       <ToDoList />
     </div>
   );
-}
+};
 
 function WishsPage() {
   return (
@@ -35,7 +37,7 @@ function WishsPage() {
       <WishPage />
     </div>
   );
-}
+};
 
 function ProfileUserPage() {
   return (
@@ -44,4 +46,13 @@ function ProfileUserPage() {
       <ProfilePage />
     </div>
   );
-}
+};
+
+function ShopCartPage() {
+  return (
+    <div style={{ display: 'flex' }}>
+      <Sidebar />
+      <ShopCart />
+    </div>
+  );
+};

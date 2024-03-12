@@ -1,11 +1,11 @@
 import { Card, Button, Badge } from 'react-bootstrap';
 
 // function WishCard({ task, onEditClick, onToggleStatus, onDeleteClick }) {
-function WishCard({ wish, onEditClick, onDeleteClick}) {
+function WishCard({ wish, onEditClick, onDeleteClick, onAddToCart }) {
 
-  const toggleStatus = () => {
-    onToggleStatus(task._id, task.active);
-  };
+  // const toggleStatus = () => {
+  //   onToggleStatus(task._id, task.active);
+  // };
 
   return (
     <Card style={{ width: '18rem' }}>
@@ -35,8 +35,9 @@ function WishCard({ wish, onEditClick, onDeleteClick}) {
 
         <Card.Text className="text-end"><b>Points: {wish.points}</b></Card.Text>
 
-        <Button variant="success" style={{ marginLeft: '5px' }}>
-          <i className="bi bi-cart-check"></i>
+
+        <Button variant="success" style={{ marginLeft: '5px' }} onClick={() => onAddToCart(wish._id)}>
+          <i className="bi bi-cart-plus"></i> Agregar al Carrito
         </Button>
 
       </Card.Body>

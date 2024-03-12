@@ -4,6 +4,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Container, Row, Col, Button, Modal, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const WishList = () => {
 
@@ -110,6 +111,35 @@ const WishList = () => {
     }
   };  
 
+  const addToCart = async (wishId) => {
+    try {
+      const token = Cookies.get('token');
+      const response = await axios.post(`http://localhost:8080/add-shopCar`, {
+        deseoId: wishId,
+        amount: 1
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Si la petición se completó correctamente, muestra un SweetAlert
+      Swal.fire({
+        icon: 'success',
+        title: '¡Tu Deseo se agregó correctamente!',
+        showConfirmButton: false,
+        timer: 1500 // Cierra automáticamente después de 1.5 segundos
+      });
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      // En caso de error, muestra un mensaje de error con SweetAlert
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al agregar el deseo al carrito. Por favor, intenta de nuevo más tarde.'
+      });
+    }
+  };
+
   useEffect(() => {
     fetchWishs();
   }, []);
@@ -124,7 +154,7 @@ const WishList = () => {
         {/* Mapeo de tareas para renderizar ToDoCard */}
         {wishs.map((wish, index) => (
           <Col key={index}>
-            <WishCard wish={wish} onEditClick={handleEditClick} onDeleteClick={handleDeleteWish}/>
+            <WishCard wish={wish} onEditClick={handleEditClick} onDeleteClick={handleDeleteWish} onAddToCart={addToCart}/>
           </Col>
         ))}
       </Row>
