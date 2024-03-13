@@ -52,6 +52,6 @@ router.delete('/wishDelete/:id', verifyToken, deleteWish);
 router.get('/shopCar', verifyToken, listAllShop)
 router.post('/add-shopCar', verifyToken, addToCar)
 router.delete('/delete-wish/:id', verifyToken, deleteWishCar)
-router.patch('/buyCar/:id', verifyToken, processAndPuchaseCar)
+router.patch('/buyCart/:id', verifyToken, processAndPuchaseCar)
 
 module.exports = router;
