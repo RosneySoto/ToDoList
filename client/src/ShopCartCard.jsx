@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 
-const ShopCartCard = ({ product, processOrder }) => {
+const ShopCartCard = ({ product, processOrder, onDeleteClick }) => {
 
   const formatFecha = (fecha) => {
       const date = new Date(fecha);
@@ -36,7 +36,7 @@ const ShopCartCard = ({ product, processOrder }) => {
                   <Card.Text>Fecha de creación: {formatFecha(product.dateCreated)}</Card.Text>
               </Card.Text>
               <Button variant="primary" onClick={handleProcessOrder}>Confirmar Pedido</Button>
-              <Button variant="danger" style={{ marginLeft: '10px' }}>Eliminar Carrito</Button>
+              <Button variant="danger" style={{ marginLeft: '10px' }} onClick={onDeleteClick}>Eliminar Carrito</Button>
           </Card.Body>
       </Card>
   );

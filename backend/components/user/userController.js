@@ -11,8 +11,8 @@ const addUser = async (req, res) => {
             console.log('[ERROR]-> Faltan datos del usuario');
             return res.status(404).json('Faltan datos del usuario');
         } else {
-            const user = req.user;
-            res.status(201).json('Logeado correctamente');
+            newUser = await ContainerUser.addUser(req.body)
+            res.status(201).json('Se regristro el usuario correctamente');
         };        
     } catch (error) {
         res.status(500).json({error: 'Error en el controlador'});

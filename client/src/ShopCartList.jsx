@@ -40,6 +40,20 @@ const ShopCartList = () => {
         }
     };
 
+    const handleDeleteCart = async (cartId) => {
+        try {
+          const token = Cookies.get('token');
+          await axios.delete(`http://localhost:8080/deleteCart/${cartId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          fetchProducts();
+        } catch (error) {
+          console.error('Error deleting task:', error);
+        }
+      };
+
     useEffect(() => {
         fetchProducts();
     }, []);
@@ -50,7 +64,7 @@ const ShopCartList = () => {
             <Row xs={1} md={2} lg={4} className="g-4">
                 {products.map((product, index) => (
                     <Col key={index}>
-                        <ShopCartCard product={product} processOrder={processOrder} />
+                        <ShopCartCard product={product} processOrder={processOrder} onDeleteClick={() => handleDeleteCart(product._id)} />
                     </Col>
                 ))}
             </Row>

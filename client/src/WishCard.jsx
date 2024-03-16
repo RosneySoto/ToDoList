@@ -1,11 +1,9 @@
-import { Card, Button, Badge } from 'react-bootstrap';
+import { Card, Button, Form } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
 
-// function WishCard({ task, onEditClick, onToggleStatus, onDeleteClick }) {
 function WishCard({ wish, onEditClick, onDeleteClick, onAddToCart }) {
 
-  // const toggleStatus = () => {
-  //   onToggleStatus(task._id, task.active);
-  // };
+  const [quantity, setQuantity] = useState(1);
 
   return (
     <Card style={{ width: '18rem' }}>
@@ -21,7 +19,6 @@ function WishCard({ wish, onEditClick, onDeleteClick, onAddToCart }) {
             <i className="bi bi-trash3"></i>
           </Button>
 
-
         </div>
 
         <div style={{ justifyContent: 'right', marginBottom: '30px' }}>
@@ -35,8 +32,17 @@ function WishCard({ wish, onEditClick, onDeleteClick, onAddToCart }) {
 
         <Card.Text className="text-end"><b>Points: {wish.points}</b></Card.Text>
 
+        <Form.Group controlId="formQuantity" className="mb-3">
+          <Form.Label>Cantidad</Form.Label>
+          <Form.Control
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            min={1}
+          />
+        </Form.Group>
 
-        <Button variant="success" style={{ marginLeft: '5px' }} onClick={() => onAddToCart(wish._id)}>
+        <Button variant="success" style={{ marginLeft: '5px' }} onClick={() => onAddToCart(wish._id, quantity)}>
           <i className="bi bi-cart-plus"></i> Agregar al Carrito
         </Button>
 

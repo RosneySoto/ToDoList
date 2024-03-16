@@ -6,6 +6,7 @@ import Sidebar from './SideBar.jsx';
 import ProfilePage from './ProfilePage.jsx'
 import WishPage from './WishList.jsx';
 import ShopCart from './ShopCartList.jsx'
+import RegisterForm from './RegisterFrom.jsx'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/profile" element={<ProfileUserPage />} />
         <Route path="/wish" element={<WishsPage />} />
         <Route path="/cart" element={<ShopCartPage />} />
+        <Route path="/register" element={<RegisterForm />} />
       </Routes>
     </Router>
   );

@@ -76,7 +76,7 @@ class ContainerShopCar {
                 });
     
                 // Establecer el totalPoints inicial
-                newAddToCar.totalPoints = newAddToCar.items[0].total_Points;
+                newAddToCar.total_Points_Car = newAddToCar.items[0].total_Points;
     
                 return newAddToCar.save();
             }

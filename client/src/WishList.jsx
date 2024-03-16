@@ -111,12 +111,12 @@ const WishList = () => {
     }
   };  
 
-  const addToCart = async (wishId) => {
+  const addToCart = async (wishId, quantity) => {
     try {
       const token = Cookies.get('token');
       const response = await axios.post(`http://localhost:8080/add-shopCar`, {
         deseoId: wishId,
-        amount: 1
+        amount: quantity
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -138,7 +138,7 @@ const WishList = () => {
         text: 'Hubo un problema al agregar el deseo al carrito. Por favor, intenta de nuevo más tarde.'
       });
     }
-  };
+  };  
 
   useEffect(() => {
     fetchWishs();

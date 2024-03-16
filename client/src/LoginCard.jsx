@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function LoginCard({ onSubmit }) {
   const [email, setEmail] = useState('');
@@ -38,6 +39,7 @@ export default function LoginCard({ onSubmit }) {
         />
       </div>
       <button type="submit" className="btn btn-primary w-100">Iniciar Sesion</button>
+      <Link to="/register">Quiero registrarme</Link>
     </form>
 );
 };
