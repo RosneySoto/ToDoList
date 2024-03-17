@@ -67,7 +67,6 @@ const ToDoList = () => {
   const handleSaveEdit = async () => {
     try {
       const token = Cookies.get('token');
-      console.log('[TOKEN AL EDITAR ]' + token);
       const response = await axios.patch(`http://localhost:8080/task/edit/${selectedTask._id}`, editFormData, {
         headers: {
           Authorization: `Bearer ${token}`,

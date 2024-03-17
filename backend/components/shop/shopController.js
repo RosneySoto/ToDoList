@@ -56,7 +56,7 @@ const deleteWishCar = async (req, res) => {
     }
 };
 
-const deleteTask = async (req, res) => {
+const deleteCart = async (req, res) => {
     const id = req.params.id;
     try {
         const shopDelete = await ContainerShopCar.deleteShopCar(id);
@@ -86,6 +86,6 @@ module.exports = {
     listAllShop,
     addToCar,
     deleteWishCar,
-    deleteTask,
+    deleteCart,
     processAndPuchaseCar
 };
