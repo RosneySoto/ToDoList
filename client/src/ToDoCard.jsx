@@ -1,9 +1,9 @@
 import { Card, Button, Badge } from 'react-bootstrap';
 
-function ToDoCard({ task, onEditClick, onToggleStatus, onDeleteClick }) {
+function ToDoCard({ task, onEditClick, onToggleStatus, onDeleteClick, setUserData }) {
 
   const toggleStatus = () => {
-    onToggleStatus(task._id, task.active);
+    onToggleStatus(task._id, task.active, setUserData);
   };
 
   return (
@@ -13,7 +13,7 @@ function ToDoCard({ task, onEditClick, onToggleStatus, onDeleteClick }) {
         <div style={{ display: 'flex', justifyContent: 'right', marginBottom: '10px' }}>
           
           <div style={{ alignItems: 'initial', marginBottom: '15px', }}>
-            <Badge bg={task.active ? 'success' : 'danger'}>{task.active ? 'Activa' : 'Inactiva'}</Badge>
+            <Badge bg={task.active ? 'success' : 'danger'}>{task.active ? 'Por hacer' : 'Completada'}</Badge>
           </div>
 
           <Button variant="warning" name="editar" onClick={() => onEditClick(task)}>

@@ -140,10 +140,10 @@ class ContainerShopCar {
                     path: 'deseoId',
                     select: 'title detail points'
                 }
-            });
+            }).populate('userId', 'name lastname');
 
             const carDetails = {
-                userId: car.userId,
+                userId: car.userId.name + ' ' + car.userId.lastname,
                 total_Points_Car: car.total_Points_Car,
                 items: car.items.map(item => ({
                     title: item.deseoId.title,
@@ -194,7 +194,7 @@ class ContainerShopCar {
                 //Envio de mail al usuario
                 const mailOptions = {
                 from: process.env.APP_MAIL_NODEMAILER, //Se debe crear un mail generico para hacer los envios de los mails a los usuarios
-                to: process.env.APP_MAIL_NODEMAILER,
+                to: user.email,
                 subject: 'Detalles del Carrito de Compras',
                 html: `
                     <h1>Detalles del carrito:</h1>

@@ -26,7 +26,8 @@ const ShopCartCard = ({ product, processOrder, onDeleteClick }) => {
                   <ul>
                       {product.items.map((item, index) => (
                           <li key={index}>
-                              <p>Título: {item.deseoId ? item.deseoId.title : 'N/A'} - Cantidad: {product.items.filter(i => i.deseoId && i.deseoId._id === item.deseoId._id).length}</p>
+                              {/* <p>Título: {item.deseoId ? item.deseoId.title : 'N/A'} - Cantidad: {product.items.filter(i => i.deseoId && i.deseoId._id === item.deseoId._id).length}</p> */}
+                              <p>Título: {item.deseoId ? item.deseoId.title : 'N/A'} - Cantidad: {item.amount}</p>
                               <p>Detalles: {item.deseoId ? item.deseoId.detail : 'N/A'}</p>
                               <p>Valor del deseo: {item.total_Points}</p>
                           </li>

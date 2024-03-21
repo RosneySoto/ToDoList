@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Container, Row, Col, Button, Modal, Form } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 const ToDoList = () => {
 
   const [tasks, setTasks] = useState([]);
+  const [userData, setUserData] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
@@ -47,8 +49,20 @@ const ToDoList = () => {
 
       handleModalClose();
       fetchTasks();
+      Swal.fire({
+        icon: 'success',
+        title: '¡Tarea creada correctamente!',
+        showConfirmButton: false,
+        timer: 1500 // Cierra automáticamente después de 1.5 segundos
+      });
     } catch (error) {
       console.error('Error creating task:', error);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error al crear la tarea!',
+        showConfirmButton: false,
+        timer: 1500 // Cierra automáticamente después de 1.5 segundos
+      });
     }
   };
 
@@ -80,7 +94,7 @@ const ToDoList = () => {
     }
   };
 
-  const handleToggleStatus = async (taskId, isActive) => {
+  const handleToggleStatus = async (taskId, isActive, setUserData) => {
     try {
       const token = Cookies.get('token');
       if (isActive) {
@@ -96,11 +110,51 @@ const ToDoList = () => {
           },
         });
       }
+  
+      // Actualizar los puntos del usuario en el estado local del Sidebar después de completar la solicitud
+      const userId = Cookies.get('userId');
+      if (userId) {
+        axios.get(`http://localhost:8080/user/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+          },
+        })
+        .then(response => {
+          setUserData(response.data.userById.points);
+          console.log(response.data.userById.points); // Si muestra el ID del usuario
+        })
+        .catch(error => {
+          console.error('Error obteniendo datos del usuario:', error);
+        });
+      }
+  
       fetchTasks();
     } catch (error) {
       console.error('Error toggling task status:', error);
     }
   };  
+
+  // const handleToggleStatus = async (taskId, isActive) => {
+  //   try {
+  //     const token = Cookies.get('token');
+  //     if (isActive) {
+  //       await axios.put(`http://localhost:8080/task/finish/${taskId}`, {}, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+  //     } else {
+  //       await axios.put(`http://localhost:8080/task/openTask/${taskId}`, {}, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+  //     }
+  //     fetchTasks();
+  //   } catch (error) {
+  //     console.error('Error toggling task status:', error);
+  //   }
+  // };  
 
   const fetchTasks = async () => {
     try {
@@ -179,7 +233,14 @@ const ToDoList = () => {
         {/* Mapeo de tareas para renderizar ToDoCard */}
         {tasks.map((task, index) => (
           <Col key={index}>
-            <ToDoCard task={task} onEditClick={handleEditClick} onToggleStatus={handleToggleStatus} onDeleteClick={handleDeleteTask}/>
+            {/* <ToDoCard task={task} onEditClick={handleEditClick} onToggleStatus={handleToggleStatus} onDeleteClick={handleDeleteTask}/> */}
+            <ToDoCard 
+              task={task} 
+              onEditClick={handleEditClick} 
+              onToggleStatus={(taskId, isActive) => handleToggleStatus(taskId, isActive, setUserData)} 
+              onDeleteClick={handleDeleteTask}
+            />
+
           </Col>
         ))}
       </Row>
