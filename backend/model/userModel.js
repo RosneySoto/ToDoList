@@ -25,6 +25,10 @@ const userSchema = new Schema({
         type: Number,
         default: 0,
         required: false
+    },
+    groupId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'group'
     }
 });
 
