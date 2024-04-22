@@ -11,8 +11,8 @@ const addUser = async (req, res) => {
             console.log('[ERROR]-> Faltan datos del usuario');
             return res.status(404).json('Faltan datos del usuario');
         } else {
-            newUser = await ContainerUser.addUser(req.body)
-            res.status(201).json('Se regristro el usuario correctamente');
+            const userId = req.user._id;
+            res.status(201).json({ message: 'Usuario creado correctamente', userId: userId });
         };        
     } catch (error) {
         res.status(500).json({error: 'Error en el controlador'});
@@ -146,6 +146,22 @@ const updatePass = async (req, res) => {
     };
 };
 
+const addGroupToUser = async (req, res) => {
+    try {
+        const groupName = req.body;
+        const groupUser = await ContainerUser.addGroupToUser(groupName);
+
+        if(!groupName){
+            return res.status(401).json({ error: 'No se indico el nombre del grupo' });
+        } else {
+            return res.status(200).json({userGroup: groupUser});
+        }
+    } catch (error) {
+        console.log('error al agregar el grupo', error);
+        res.status(500).json({ error: 'Error al agregar el password' });
+    }
+}
+
 module.exports = {
     addUser,
     getUsers,
@@ -157,4 +173,5 @@ module.exports = {
     logoutUser,
     getLoginUser,
     updatePass,
+    addGroupToUser
 }

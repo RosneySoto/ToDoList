@@ -39,6 +39,10 @@ const taskSchema = new Schema({
     completionDate: {
         type: Date,
         default: null
+    },
+    groupId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'group'
     }
 });
 

@@ -28,7 +28,8 @@ const userSchema = new Schema({
     },
     groupId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'group'
+        ref: 'group',
+        default: null
     }
 });
 

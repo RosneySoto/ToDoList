@@ -7,6 +7,7 @@ import ProfilePage from './ProfilePage.jsx'
 import WishPage from './WishList.jsx';
 import ShopCart from './ShopCartList.jsx'
 import RegisterForm from './RegisterFrom.jsx'
+import GroupFrom from './GroupFrom.jsx'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/wish" element={<WishsPage />} />
         <Route path="/cart" element={<ShopCartPage />} />
         <Route path="/register" element={<RegisterForm />} />
+        <Route path="/group" element={<GroupFrom />} />
       </Routes>
     </Router>
   );

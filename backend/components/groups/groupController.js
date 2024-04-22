@@ -1,4 +1,6 @@
 const ContainerGroup = require('./groupService');
+const groupModel = require('../../model/groupModel');
+const userModel = require ('../../model/userModel');
 
 const listGroup = async (req, res) => {
     try {
@@ -10,20 +12,32 @@ const listGroup = async (req, res) => {
 };
 
 const addGroup = async (req, res) => {
+    const userId = req.cookies.userId || req.body.userId || req.query.userId;
+    console.log('nuevo id ' + userId);
+    const {nameGroup}  = req.body;
+
+    if (!userId || !nameGroup   ) {
+        return res.status(400).json({ error: 'El userId y el campo nameGroup son requeridos y deben ser válidos.' });
+    }
+
     try {
-        const newGroup = req.body;
-        if(!newGroup){
-            res.status(404).json('Debe ingresar nombre para el grupo');
-        } else {
-            groupSave = await ContainerGroup.addGroup(newGroup);
-        }
-        const list = await ContainerGroup.getGroups();
-        res.status(201).json({Groups: list});
+        const newGroup = new groupModel({ nameGroup });
+        await newGroup.save();
+
+        const userUpdate = await userModel.findByIdAndUpdate(userId, {
+            groupId: newGroup._id // Asociar el ID del nuevo grupo creado
+        }, {
+            new: true
+        });
+
+        res.status(201).json({ message: 'Grupo creado correctamente', user: userUpdate });
+
     } catch (error) {
-        console.log('Error al crear el grupo indicado');
-        res.status(500).json('Error al crear el grupo', error);
+        console.error('Error al crear el grupo:', error);
+        res.status(500).json({ error: 'Hubo un problema al crear el grupo' });
     }
 };
+
 
 const deleteGroup = async (req, res) => {
     try {
@@ -67,9 +81,14 @@ const getGroupById = async (req, res) => {
     };
 };
 
+const getViewGroup = (req, res) => {
+    res.status(404).json('Por favor indica el nbombre del grupo');
+};
+
 module.exports = {
     listGroup,
     addGroup,
     deleteGroup,
-    getGroupById
+    getGroupById,
+    getViewGroup
 }

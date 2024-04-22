@@ -115,6 +115,19 @@ class ContainerUser {
             console.log('[ERROR]-> Error al actualizar el password', error);
         };
     };
+
+    static async addGroupToUser (group){
+        try {
+            const groupUser = userModel.findByIdAndUpdate(
+                { $set: { groupId: group } },
+                { new: false }
+            );
+            return groupUser;
+        } catch (error) {
+            console.log('[ERROR]-> Error al asociar el grupo al usuario', error);
+            throw error
+        }
+    }
 };
 
 module.exports = ContainerUser;

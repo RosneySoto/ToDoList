@@ -17,7 +17,7 @@ const { addWish, deleteWish, updateWish, wishList, getWishbyId } = require('../c
 const { listAllShop, addToCar, deleteWishCar, processAndPuchaseCar, deleteCart } = require('../components/shop/shopController');
 
 //Importaciones Modulo Group
-const { addGroup, deleteGroup, getGroupById, listGroup } = require('../components/groups/groupController');
+const { addGroup, deleteGroup, getGroupById, listGroup, getViewGroup } = require('../components/groups/groupController');
 
 //RUTAS DEL COMPONENTE TASK
 router.get('/task', verifyToken, listTask);
@@ -61,6 +61,7 @@ router.patch('/buyCart/:id', verifyToken, processAndPuchaseCar);
 
 //RUTAS DEL COMPONENTE GRUPO
 router.get('/group', listGroup);
+router.get('/group', getViewGroup);
 router.get('/group/:id', getGroupById);
 router.post('/group', addGroup);
 router.delete('/group/:id', deleteGroup);

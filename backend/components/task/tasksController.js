@@ -4,14 +4,17 @@ const { JWT_SECRET } = process.env;
 
 const listTask = async (req, res) => {
     try {
-        const lisTask = await ContainerTasks.getTask();
-        res.status(200).json({task: lisTask});
-        // res.render('index');
+      const userId = req.user.id;
+      console.log(userId);
+
+      const lisTask = await ContainerTasks.getTask(userId);
+      res.status(200).json({ task: lisTask });
     } catch (error) {
-        res.status(500).json({error: 'Error en el controlador'});
-        console.log('No se pueden mostrar las tareas');
-    };
+      res.status(500).json({ error: 'Error en el controlador' });
+      console.log('No se pueden mostrar las tareas');
+    }
 };
+  
 
 const addTask = async (req, res) => {
     try {

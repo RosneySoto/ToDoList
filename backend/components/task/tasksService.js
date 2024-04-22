@@ -3,21 +3,24 @@ const usersModel = require('../../model/userModel');
 
 class ContainerTasks {
     
-    static getTask(){
+    static async getTask(userId) {
         try {
-            const listTask = tasksModel.find().populate({
-                path: 'userId assignedUser priorityId',
-                select: '_id name lastname'
-            });
-            if(!listTask) {
-                console.log('Error al listar las tareas');
-            } else {
-                return listTask;
-            };
+          const user = await usersModel.findById(userId);
+          if (!user) {
+            throw new Error('Usuario no encontrado');
+          }
+      
+          const listTask = await tasksModel.find({ groupId: user.groupId }).populate({
+            path: 'userId assignedUser priorityId',
+            select: '_id name lastname'
+          });
+      
+          return listTask;
         } catch (error) {
-            console.log('[ERROR]-> Error al mostrar la lista de tareas');
-        };
-    };
+          console.error('Error al mostrar la lista de tareas:', error);
+          throw error;
+        }
+    }
 
     static addTask(task, userId){
         try {

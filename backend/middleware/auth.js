@@ -52,7 +52,6 @@ const register = async (req, res, next) => {
                 password: passwordHash,
                 birthday: birthday,
             };
-            console.log(newUser);
             const saveUser = await ContainerUser.addUser(newUser);
             req.user = saveUser;
             return next();
@@ -75,7 +74,8 @@ const generateToken = async (req, res, next) => {
         id: user.id,
         name: user.name,
         lastname: user.lastname,
-        email: user.email       
+        email: user.email,
+        groupId: user.groupId 
     };
 
     const token = jwt.sign(payload, JWT_SECRET, {expiresIn: '24h'});
@@ -87,6 +87,7 @@ const generateToken = async (req, res, next) => {
 
     next();
 };
+
 
 const verifyToken = async (req, res, next) => {
 
@@ -104,7 +105,8 @@ const verifyToken = async (req, res, next) => {
         if (error) {
             return res.status(401).send({ message: 'No estás autorizado' });
         }
-        req.userId = data.email;
+        // req.userId = data.email;
+        req.user = data;
         next();
     });
 };
