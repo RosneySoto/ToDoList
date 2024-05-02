@@ -1,4 +1,5 @@
 const groupModel = require('../../model/groupModel');
+const {registroMail} = require('../../middleware/nodemailer')
 
 class ContainerGroup {
 
@@ -47,6 +48,30 @@ class ContainerGroup {
             console.log('[ERROR]-> Error al buscar usuario por ID', error);
             throw error;
         }
+    };
+
+    static async inviteUser (email){
+        try {
+            if(!email){
+                console.log('No se ingreso el email')
+                return null
+            } else {
+                const mailOptions = {
+                    from: process.env.APP_MAIL_NODEMAILER,
+                to: email,
+                subject: 'Invitación para registrate',
+                html: `
+                    <h1>Hola! te invitamos a ser parte del grupo</h1>
+                    <p>Ingresa al siguiente link y completa tus datos para comenzar a utilizar nuesta aplicación</p>
+                    <p>www.localhost8080/user/register</p>
+                `
+                }
+                await registroMail(mailOptions);
+            }
+        } catch (error) {
+            console.log('Error en el servidor');
+            throw error;
+        };
     };
 };
 

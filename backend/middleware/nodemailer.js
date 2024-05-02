@@ -22,4 +22,15 @@ async function enviarMail(mailOptions) {
     }
 }
 
-module.exports = {enviarMail}
+async function registroMail(email){
+    try {
+        const data = await transporter.sendMail(email)
+    } catch (error) {
+        console.log('[ERROR AL ENVIAR EL MAIL DE REGISTRO]' + error)
+    }
+}
+
+module.exports = {
+    enviarMail,
+    registroMail
+}

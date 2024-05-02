@@ -85,10 +85,26 @@ const getViewGroup = (req, res) => {
     res.status(404).json('Por favor indica el nbombre del grupo');
 };
 
+const inviteUser = async (req, res) => {
+    try {
+        const {email} = req.body
+        if(!email){
+            console.log('Debe ingresar un mail')
+            res.status(400).json('Debe ingresar un mail')
+        }
+        const data = await ContainerGroup.inviteUser(email);
+        res.status(200).json({message: 'mail enviado correctamente', data})
+    } catch (error) {
+        console.log('[ERROR]-> No se pudo enviar el mail', error);
+        res.status(404).json('Error al enviar el link de registro')
+    }
+}
+
 module.exports = {
     listGroup,
     addGroup,
     deleteGroup,
     getGroupById,
-    getViewGroup
+    getViewGroup,
+    inviteUser  
 }
