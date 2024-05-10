@@ -59,10 +59,10 @@ class ContainerGroup {
                 const mailOptions = {
                     from: process.env.APP_MAIL_NODEMAILER,
                 to: email,
-                subject: 'Invitación para registrate',
+                subject: 'Invitación para registrarte',
                 html: `
                     <h1>Hola! te invitamos a ser parte del grupo</h1>
-                    <p>Ingresa al siguiente link y completa tus datos para comenzar a utilizar nuesta aplicación</p>
+                    <p>Ingresa al siguiente link y completa tus datos para comenzar a utilizar nuestra aplicación</p>
                     <p>www.localhost8080/user/register</p>
                 `
                 }
